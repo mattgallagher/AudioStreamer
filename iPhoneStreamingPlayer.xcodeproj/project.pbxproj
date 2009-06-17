@@ -14,16 +14,16 @@
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
 		28D7ACF80DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m */; };
 		C9423DF10EF8AA6B003B785B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9423DF00EF8AA6B003B785B /* CFNetwork.framework */; };
-		C94501C90FE8716F00495BCF /* playbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = C94501C30FE8716F00495BCF /* playbutton.png */; };
-		C94501CA0FE8716F00495BCF /* iPhoneStreamingPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C94501C40FE8716F00495BCF /* iPhoneStreamingPlayerViewController.xib */; };
-		C94501CB0FE8716F00495BCF /* stopbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = C94501C50FE8716F00495BCF /* stopbutton.png */; };
-		C94501CC0FE8716F00495BCF /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C94501C60FE8716F00495BCF /* MainWindow.xib */; };
-		C94501CD0FE8716F00495BCF /* loadingbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = C94501C70FE8716F00495BCF /* loadingbutton.png */; };
-		C94501CE0FE8716F00495BCF /* pausebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = C94501C80FE8716F00495BCF /* pausebutton.png */; };
 		C9AB93E20FCF816F0047C0FA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AB93E10FCF816F0047C0FA /* AudioToolbox.framework */; };
 		C9AB93F30FCF81790047C0FA /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AB93F20FCF81790047C0FA /* MediaPlayer.framework */; };
 		C9C2D87A0EB6E09C00A3D071 /* AudioStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = C9C2D8780EB6E09C00A3D071 /* AudioStreamer.m */; };
 		C9C2D8CE0EB6E31200A3D071 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C2D8CD0EB6E31200A3D071 /* QuartzCore.framework */; };
+		C9E673020FE8C55B0033BF43 /* iPhoneStreamingPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9E672FF0FE8C55B0033BF43 /* iPhoneStreamingPlayerViewController.xib */; };
+		C9E673040FE8C55B0033BF43 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9E673010FE8C55B0033BF43 /* MainWindow.xib */; };
+		C9E673090FE8C5650033BF43 /* playbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = C9E673050FE8C5650033BF43 /* playbutton.png */; };
+		C9E6730A0FE8C5650033BF43 /* stopbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = C9E673060FE8C5650033BF43 /* stopbutton.png */; };
+		C9E6730B0FE8C5650033BF43 /* loadingbutton.png in Resources */ = {isa = PBXBuildFile; fileRef = C9E673070FE8C5650033BF43 /* loadingbutton.png */; };
+		C9E6730C0FE8C5650033BF43 /* pausebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = C9E673080FE8C5650033BF43 /* pausebutton.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,19 +37,19 @@
 		28D7ACF70DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iPhoneStreamingPlayerViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* iPhoneStreamingPlayer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneStreamingPlayer_Prefix.pch; sourceTree = "<group>"; };
-		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C9423DF00EF8AA6B003B785B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
-		C94501C30FE8716F00495BCF /* playbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playbutton.png; path = Resources/playbutton.png; sourceTree = "<group>"; };
-		C94501C40FE8716F00495BCF /* iPhoneStreamingPlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = iPhoneStreamingPlayerViewController.xib; path = Resources/iPhoneStreamingPlayerViewController.xib; sourceTree = "<group>"; };
-		C94501C50FE8716F00495BCF /* stopbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stopbutton.png; path = Resources/stopbutton.png; sourceTree = "<group>"; };
-		C94501C60FE8716F00495BCF /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = Resources/MainWindow.xib; sourceTree = "<group>"; };
-		C94501C70FE8716F00495BCF /* loadingbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = loadingbutton.png; path = Resources/loadingbutton.png; sourceTree = "<group>"; };
-		C94501C80FE8716F00495BCF /* pausebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pausebutton.png; path = Resources/pausebutton.png; sourceTree = "<group>"; };
 		C9AB93E10FCF816F0047C0FA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C9AB93F20FCF81790047C0FA /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		C9C2D8780EB6E09C00A3D071 /* AudioStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioStreamer.m; sourceTree = "<group>"; };
 		C9C2D8790EB6E09C00A3D071 /* AudioStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioStreamer.h; sourceTree = "<group>"; };
 		C9C2D8CD0EB6E31200A3D071 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
+		C9E672FF0FE8C55B0033BF43 /* iPhoneStreamingPlayerViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = iPhoneStreamingPlayerViewController.xib; path = "iPhone Resources/iPhoneStreamingPlayerViewController.xib"; sourceTree = "<group>"; };
+		C9E673010FE8C55B0033BF43 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = "iPhone Resources/MainWindow.xib"; sourceTree = "<group>"; };
+		C9E673050FE8C5650033BF43 /* playbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playbutton.png; path = "Shared Resources/playbutton.png"; sourceTree = "<group>"; };
+		C9E673060FE8C5650033BF43 /* stopbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = stopbutton.png; path = "Shared Resources/stopbutton.png"; sourceTree = "<group>"; };
+		C9E673070FE8C5650033BF43 /* loadingbutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = loadingbutton.png; path = "Shared Resources/loadingbutton.png"; sourceTree = "<group>"; };
+		C9E673080FE8C5650033BF43 /* pausebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pausebutton.png; path = "Shared Resources/pausebutton.png"; sourceTree = "<group>"; };
+		C9E673410FE8C6510033BF43 /* iPhoneInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = iPhoneInfo.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +106,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				C9E673410FE8C6510033BF43 /* iPhoneInfo.plist */,
 				32CA4F630368D1EE00C91783 /* iPhoneStreamingPlayer_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
@@ -115,13 +116,12 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				C94501C30FE8716F00495BCF /* playbutton.png */,
-				C94501C40FE8716F00495BCF /* iPhoneStreamingPlayerViewController.xib */,
-				C94501C50FE8716F00495BCF /* stopbutton.png */,
-				C94501C60FE8716F00495BCF /* MainWindow.xib */,
-				C94501C70FE8716F00495BCF /* loadingbutton.png */,
-				C94501C80FE8716F00495BCF /* pausebutton.png */,
-				8D1107310486CEB800E47090 /* Info.plist */,
+				C9E672FF0FE8C55B0033BF43 /* iPhoneStreamingPlayerViewController.xib */,
+				C9E673010FE8C55B0033BF43 /* MainWindow.xib */,
+				C9E673050FE8C5650033BF43 /* playbutton.png */,
+				C9E673060FE8C5650033BF43 /* stopbutton.png */,
+				C9E673070FE8C5650033BF43 /* loadingbutton.png */,
+				C9E673080FE8C5650033BF43 /* pausebutton.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -182,12 +182,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C94501C90FE8716F00495BCF /* playbutton.png in Resources */,
-				C94501CA0FE8716F00495BCF /* iPhoneStreamingPlayerViewController.xib in Resources */,
-				C94501CB0FE8716F00495BCF /* stopbutton.png in Resources */,
-				C94501CC0FE8716F00495BCF /* MainWindow.xib in Resources */,
-				C94501CD0FE8716F00495BCF /* loadingbutton.png in Resources */,
-				C94501CE0FE8716F00495BCF /* pausebutton.png in Resources */,
+				C9E673020FE8C55B0033BF43 /* iPhoneStreamingPlayerViewController.xib in Resources */,
+				C9E673040FE8C55B0033BF43 /* MainWindow.xib in Resources */,
+				C9E673090FE8C5650033BF43 /* playbutton.png in Resources */,
+				C9E6730A0FE8C5650033BF43 /* stopbutton.png in Resources */,
+				C9E6730B0FE8C5650033BF43 /* loadingbutton.png in Resources */,
+				C9E6730C0FE8C5650033BF43 /* pausebutton.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,7 +217,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = iPhoneInfo.plist;
 				PRODUCT_NAME = iPhoneStreamingPlayer;
 			};
 			name = Debug;
@@ -229,7 +229,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
-				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_FILE = iPhoneInfo.plist;
 				PRODUCT_NAME = iPhoneStreamingPlayer;
 			};
 			name = Release;

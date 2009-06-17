@@ -55,7 +55,11 @@ NSString * const AS_NETWORK_CONNECTION_FAILED_STRING = @"Network connection fail
 	buffer:(AudioQueueBufferRef)inBuffer;
 - (void)handlePropertyChangeForQueue:(AudioQueueRef)inAQ
 	propertyID:(AudioQueuePropertyID)inID;
+
+#ifdef TARGET_OS_IPHONE
 - (void)handleInterruptionChangeToState:(AudioQueuePropertyID)inInterruptionState;
+#endif
+
 - (void)enqueueBuffer;
 - (void)handleReadFromStream:(CFReadStreamRef)aStream
 	eventType:(CFStreamEventType)eventType;
@@ -327,6 +331,12 @@ void ASReadStreamCallBack
 			return AS_GET_AUDIO_TIME_FAILED_STRING;
 		case AS_NETWORK_CONNECTION_FAILED:
 			return AS_NETWORK_CONNECTION_FAILED_STRING;
+		case AS_AUDIO_QUEUE_STOP_FAILED:
+			return AS_AUDIO_QUEUE_STOP_FAILED_STRING;
+		case AS_AUDIO_STREAMER_FAILED:
+			return AS_AUDIO_STREAMER_FAILED_STRING;
+		default:
+			return AS_AUDIO_STREAMER_FAILED_STRING;
 	}
 	
 	return AS_AUDIO_STREAMER_FAILED_STRING;
@@ -584,6 +594,7 @@ void ASReadStreamCallBack
 			kCFStreamPropertyHTTPShouldAutoredirect,
 			kCFBooleanTrue) == false)
 		{
+#ifdef TARGET_OS_IPHONE
 			UIAlertView *alert =
 				[[UIAlertView alloc]
 					initWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
@@ -597,6 +608,20 @@ void ASReadStreamCallBack
 				withObject:nil
 				waitUntilDone:YES];
 			[alert release];
+#else
+		NSAlert *alert =
+			[NSAlert
+				alertWithMessageText:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+				defaultButton:NSLocalizedString(@"OK", @"")
+				alternateButton:nil
+				otherButton:nil
+				informativeTextWithFormat:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+		[alert
+			performSelector:@selector(runModal)
+			onThread:[NSThread mainThread]
+			withObject:nil
+			waitUntilDone:NO];
+#endif
 			return NO;
 		}
 		
@@ -624,6 +649,7 @@ void ASReadStreamCallBack
 		if (!CFReadStreamOpen(stream))
 		{
 			CFRelease(stream);
+#ifdef TARGET_OS_IPHONE
 			UIAlertView *alert =
 				[[UIAlertView alloc]
 					initWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
@@ -637,6 +663,20 @@ void ASReadStreamCallBack
 				withObject:nil
 				waitUntilDone:YES];
 			[alert release];
+#else
+		NSAlert *alert =
+			[NSAlert
+				alertWithMessageText:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+				defaultButton:NSLocalizedString(@"OK", @"")
+				alternateButton:nil
+				otherButton:nil
+				informativeTextWithFormat:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+		[alert
+			performSelector:@selector(runModal)
+			onThread:[NSThread mainThread]
+			withObject:nil
+			waitUntilDone:NO];
+#endif
 			return NO;
 		}
 		
@@ -821,6 +861,8 @@ cleanup:
 		}
 		else if (state == AS_INITIALIZED)
 		{
+			NSAssert([[NSThread currentThread] isEqual:[NSThread mainThread]],
+				@"Playback can only be started from the main thread.");
 			notificationCenter =
 				[[NSNotificationCenter defaultCenter] retain];
 			self.state = AS_STARTING_FILE_THREAD;
@@ -1547,6 +1589,7 @@ cleanup:
 	[pool release];
 }
 
+#ifdef TARGET_OS_IPHONE
 //
 // handleInterruptionChangeForQueue:propertyID:
 //
@@ -1567,6 +1610,7 @@ cleanup:
 		[self pause];
 	}
 }
+#endif
 
 @end
 

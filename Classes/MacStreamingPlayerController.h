@@ -1,6 +1,6 @@
 //
-//  main.m
-//  iPhone/MacStreamingPlayer
+//  MacStreamingPlayerController.h
+//  MacStreamingPlayer
 //
 //  Created by Matt Gallagher on 28/10/08.
 //  Copyright Matt Gallagher 2008. All rights reserved.
@@ -12,20 +12,22 @@
 //  appreciated but not required.
 //
 
-#ifdef TARGET_OS_IPHONE
-#import <UIKit/UIKit.h>
-#else
 #import <Cocoa/Cocoa.h>
-#endif
 
-int main(int argc, const char *argv[]) {
-    
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-#ifdef TARGET_OS_IPHONE
-    int retVal = UIApplicationMain(argc, (char **)argv, nil, nil);
-#else
-    int retVal = NSApplicationMain(argc, argv);
-#endif
-    [pool release];
-    return retVal;
+@class AudioStreamer;
+
+@interface MacStreamingPlayerController : NSObject
+{
+	IBOutlet NSTextField *downloadSourceField;
+	IBOutlet NSButton *button;
+	IBOutlet NSTextField *positionLabel;
+	AudioStreamer *streamer;
+	NSTimer *progressUpdateTimer;
 }
+
+- (IBAction)buttonPressed:(id)sender;
+- (void)spinButton;
+- (void)updateProgress:(NSTimer *)aNotification;
+
+@end
+
