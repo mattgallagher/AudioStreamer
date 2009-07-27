@@ -22,7 +22,7 @@
 #include <AudioToolbox/AudioToolbox.h>
 
 #define kNumAQBufs 32			// number of audio queue buffers we allocate
-#define kAQBufSize 1024			// number of bytes in each audio queue buffer
+#define kAQBufSize 2048			// number of bytes in each audio queue buffer
 #define kAQMaxPacketDescs 512	// number of packet descriptions in our array
 
 typedef enum
@@ -69,7 +69,8 @@ typedef enum
 	AS_AUDIO_QUEUE_STOP_FAILED,
 	AS_AUDIO_QUEUE_FLUSH_FAILED,
 	AS_AUDIO_STREAMER_FAILED,
-	AS_GET_AUDIO_TIME_FAILED
+	AS_GET_AUDIO_TIME_FAILED,
+	AS_AUDIO_BUFFER_TOO_SMALL
 } AudioStreamerErrorCode;
 
 extern NSString * const ASStatusChangedNotification;
