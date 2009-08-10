@@ -1290,7 +1290,7 @@ cleanup:
 			// get the cookie size
 			UInt32 cookieSize;
 			Boolean writable;
-			OSErr ignorableError;
+			OSStatus ignorableError;
 			ignorableError = AudioFileStreamGetPropertyInfo(inAudioFileStream, kAudioFileStreamProperty_MagicCookieData, &cookieSize, &writable);
 			if (ignorableError)
 			{

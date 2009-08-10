@@ -21,7 +21,7 @@
 #include <pthread.h>
 #include <AudioToolbox/AudioToolbox.h>
 
-#define kNumAQBufs 32			// number of audio queue buffers we allocate
+#define kNumAQBufs 8			// number of audio queue buffers we allocate
 #define kAQBufSize 2048			// number of bytes in each audio queue buffer
 #define kAQMaxPacketDescs 512	// number of packet descriptions in our array
 
