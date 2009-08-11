@@ -98,7 +98,7 @@ extern NSString * const ASStatusChangedNotification;
 	AudioStreamerState state;
 	AudioStreamerStopReason stopReason;
 	AudioStreamerErrorCode errorCode;
-	OSErr err;
+	OSStatus err;
 	
 	bool discontinuous;			// flag to indicate middle of the stream
 	
