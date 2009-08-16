@@ -12,7 +12,7 @@
 //  appreciated but not required.
 //
 
-#import "AudioStreamer.h"x
+#import "AudioStreamer.h"
 #ifdef TARGET_OS_IPHONE			
 #import <CFNetwork/CFNetwork.h>
 #endif
