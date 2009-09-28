@@ -245,7 +245,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos2.0;
+				SDKROOT = iphoneos3.0;
 			};
 			name = Debug;
 		};
@@ -260,7 +260,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "B062A271-8829-487D-90D8-40B597DDE4AB";
-				SDKROOT = iphoneos2.1;
+				SDKROOT = iphoneos3.0;
 			};
 			name = Release;
 		};
