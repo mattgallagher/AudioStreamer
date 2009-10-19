@@ -961,7 +961,7 @@ cleanup:
 {
 	@synchronized(self)
 	{
-		if (bitRate != 0 && seekNeeded &&
+		if (bitRate != 0 && bitRate != ~0 && seekNeeded &&
 			(state == AS_PLAYING || state == AS_PAUSED || state == AS_BUFFERING))
 		{
 			return YES;
@@ -1361,8 +1361,13 @@ cleanup:
 				&bitRate);
 			if (err)
 			{
-				[self failWithErrorCode:AS_FILE_STREAM_GET_PROPERTY_FAILED];
-				return;
+				//
+				// m4a and a few other formats refuse to parse the bitrate so
+				// we need to set an "unparseable" condition here. If you know
+				// the bitrate (parsed it another way) you can set it on the
+				// class if needed.
+				//
+				bitRate = ~0;
 			}
 		}
 		
