@@ -790,6 +790,12 @@ void ASReadStreamCallBack
 		//
 		if (buffersUsed == 0 && self.state == AS_PLAYING)
 		{
+			err = AudioQueuePause(audioQueue);
+			if (err)
+			{
+				[self failWithErrorCode:AS_AUDIO_QUEUE_PAUSE_FAILED];
+				return;
+			}
 			self.state = AS_BUFFERING;
 		}
 	} while (isRunning && ![self runLoopShouldExit]);
@@ -1159,11 +1165,7 @@ cleanup:
 		
 		inuse[fillBufferIndex] = true;		// set in use flag
 		buffersUsed++;
-		if (self.state == AS_BUFFERING)
-		{
-			self.state = AS_PLAYING;
-		}
-		
+
 		// enqueue buffer
 		AudioQueueBufferRef fillBuf = audioQueueBuffer[fillBufferIndex];
 		fillBuf->mAudioDataByteSize = bytesFilled;
@@ -1195,13 +1197,26 @@ cleanup:
 			//
 			if (buffersUsed == kNumAQBufs - 1)
 			{
-				self.state = AS_WAITING_FOR_QUEUE_TO_START;
-
-				err = AudioQueueStart(audioQueue, NULL);
-				if (err)
+				if (self.state == AS_BUFFERING)
 				{
-					[self failWithErrorCode:AS_AUDIO_QUEUE_START_FAILED];
-					return;
+					err = AudioQueueStart(audioQueue, NULL);
+					if (err)
+					{
+						[self failWithErrorCode:AS_AUDIO_QUEUE_START_FAILED];
+						return;
+					}
+					self.state = AS_PLAYING;
+				}
+				else
+				{
+					self.state = AS_WAITING_FOR_QUEUE_TO_START;
+
+					err = AudioQueueStart(audioQueue, NULL);
+					if (err)
+					{
+						[self failWithErrorCode:AS_AUDIO_QUEUE_START_FAILED];
+						return;
+					}
 				}
 			}
 		}
@@ -1547,8 +1562,10 @@ cleanup:
 
 //
 //  Enable this logging to measure how many buffers are queued at any time.
-//	NSLog(@"Queued buffers: %ld", buffersUsed);
 //
+#if LOG_QUEUED_BUFFERS
+	NSLog(@"Queued buffers: %ld", buffersUsed);
+#endif
 	
 	pthread_cond_signal(&queueBufferReadyCondition);
 	pthread_mutex_unlock(&queueBuffersMutex);

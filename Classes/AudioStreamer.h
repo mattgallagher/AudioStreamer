@@ -21,9 +21,30 @@
 #include <pthread.h>
 #include <AudioToolbox/AudioToolbox.h>
 
-#define kNumAQBufs 8			// number of audio queue buffers we allocate
-#define kAQBufSize 2048			// number of bytes in each audio queue buffer
-#define kAQMaxPacketDescs 512	// number of packet descriptions in our array
+#define LOG_QUEUED_BUFFERS 1
+
+#define kNumAQBufs 16			// Number of audio queue buffers we allocate.
+								// Needs to be big enough to keep audio pipeline
+								// busy (non-zero number of queued buffers) but
+								// not so big that audio takes too long to begin
+								// (kNumAQBufs * kAQBufSize of data must be
+								// loaded before playback will start).
+								// Set LOG_QUEUED_BUFFERS to 1 to log how many
+								// buffers are queued at any time -- if it drops
+								// to zero too often, this value may need to
+								// increase. Min 3, typical 8-24.
+								
+#define kAQBufSize 2048			// Number of bytes in each audio queue buffer
+								// Needs to be big enough to hold a packet of
+								// audio from the audio file. If number is too
+								// large, queuing of audio before playback starts
+								// will take too long.
+								// Highly compressed files can use smaller
+								// numbers (512 or less). 2048 should hold all
+								// but the largest packets. A buffer size error
+								// will occur if this number is too small.
+
+#define kAQMaxPacketDescs 512	// Number of packet descriptions in our array
 
 typedef enum
 {
