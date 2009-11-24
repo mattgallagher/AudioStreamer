@@ -29,6 +29,7 @@
 								// not so big that audio takes too long to begin
 								// (kNumAQBufs * kAQBufSize of data must be
 								// loaded before playback will start).
+								//
 								// Set LOG_QUEUED_BUFFERS to 1 to log how many
 								// buffers are queued at any time -- if it drops
 								// to zero too often, this value may need to
@@ -51,6 +52,7 @@ typedef enum
 	AS_INITIALIZED = 0,
 	AS_STARTING_FILE_THREAD,
 	AS_WAITING_FOR_DATA,
+	AS_FLUSHING_EOF,
 	AS_WAITING_FOR_QUEUE_TO_START,
 	AS_PLAYING,
 	AS_BUFFERING,
