@@ -17,8 +17,8 @@
 #import <CFNetwork/CFNetwork.h>
 #endif
 
-#define BitRateEstimationMaxPackets 200
-#define BitRateEstimationMinPackets 20
+#define BitRateEstimationMaxPackets 5000
+#define BitRateEstimationMinPackets 50
 
 NSString * const ASStatusChangedNotification = @"ASStatusChangedNotification";
 
@@ -975,7 +975,7 @@ cleanup:
 			err = AudioFileStreamSeek(audioFileStream, seekPacket, &packetAlignedByteOffset, &ioFlags);
 			if (!err && !(ioFlags & kAudioFileStreamSeekFlag_OffsetIsEstimated))
 			{
-				seekTime -= (seekByteOffset - (packetAlignedByteOffset + dataOffset)) * 8.0 / calculatedBitRate;
+				seekTime -= ((seekByteOffset - dataOffset) - packetAlignedByteOffset) * 8.0 / calculatedBitRate;
 				seekByteOffset = packetAlignedByteOffset + dataOffset;
 			}
 		}

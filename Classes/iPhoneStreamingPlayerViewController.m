@@ -127,8 +127,6 @@
 	[volumeView sizeToFit];
 	
 	[self setButtonImage:[UIImage imageNamed:@"playbutton.png"]];
-
-	[downloadSourceField setText:@"http://192.168.1.2/~matt/voodoo.m4a"];
 }
 
 //
