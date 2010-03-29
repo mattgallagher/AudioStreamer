@@ -240,12 +240,20 @@
 	{
 		double progress = streamer.progress;
 		double duration = streamer.duration;
-		[positionLabel setStringValue:
-			[NSString stringWithFormat:@"Time Played: %.1f/%.1f seconds",
-				progress,
-				duration]];
-		[progressSlider setEnabled:YES];
-		[progressSlider setDoubleValue:100 * progress / duration];
+		
+		if (duration > 0)
+		{
+			[positionLabel setStringValue:
+				[NSString stringWithFormat:@"Time Played: %.1f/%.1f seconds",
+					progress,
+					duration]];
+			[progressSlider setEnabled:YES];
+			[progressSlider setDoubleValue:100 * progress / duration];
+		}
+		else
+		{
+			[progressSlider setEnabled:NO];
+		}
 	}
 	else
 	{
