@@ -1623,7 +1623,9 @@ cleanup:
 					// We've found HE-AAC, remember this to tell the audio queue
 					// when we construct it.
 					//
+#if !TARGET_IPHONE_SIMULATOR
 					asbd = pasbd;
+#endif
 					break;
 				}                                
 			}
