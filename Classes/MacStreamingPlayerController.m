@@ -18,6 +18,11 @@
 
 @implementation MacStreamingPlayerController
 
+- (void)awakeFromNib
+{
+	[downloadSourceField setStringValue:@"http://192.168.1.2/~matt/inside.m4a"];
+}
+
 //
 // setButtonImage:
 //
@@ -207,6 +212,23 @@
 }
 
 //
+// sliderMoved:
+//
+// Invoked when the user moves the slider
+//
+// Parameters:
+//    aSlider - the slider (assumed to be the progress slider)
+//
+- (IBAction)sliderMoved:(NSSlider *)aSlider
+{
+	if (streamer.duration)
+	{
+		double newSeekTime = ([aSlider doubleValue] / 100.0) * streamer.duration;
+		[streamer seekToTime:newSeekTime];
+	}
+}
+
+//
 // updateProgress:
 //
 // Invoked when the AudioStreamer
@@ -217,9 +239,13 @@
 	if (streamer.bitRate != 0.0)
 	{
 		double progress = streamer.progress;
+		double duration = streamer.duration;
 		[positionLabel setStringValue:
-			[NSString stringWithFormat:@"Time Played: %.1f seconds",
-				progress]];
+			[NSString stringWithFormat:@"Time Played: %.1f/%.1f seconds",
+				progress,
+				duration]];
+		[progressSlider setEnabled:YES];
+		[progressSlider setDoubleValue:100 * progress / duration];
 	}
 	else
 	{

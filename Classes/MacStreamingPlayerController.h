@@ -21,6 +21,7 @@
 	IBOutlet NSTextField *downloadSourceField;
 	IBOutlet NSButton *button;
 	IBOutlet NSTextField *positionLabel;
+	IBOutlet NSSlider *progressSlider;
 	AudioStreamer *streamer;
 	NSTimer *progressUpdateTimer;
 }
@@ -28,6 +29,7 @@
 - (IBAction)buttonPressed:(id)sender;
 - (void)spinButton;
 - (void)updateProgress:(NSTimer *)aNotification;
+- (IBAction)sliderMoved:(NSSlider *)aSlider;
 
 @end
 

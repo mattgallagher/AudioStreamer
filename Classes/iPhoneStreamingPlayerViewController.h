@@ -22,6 +22,7 @@
 	IBOutlet UIButton *button;
 	IBOutlet UIView *volumeSlider;
 	IBOutlet UILabel *positionLabel;
+	IBOutlet UISlider *progressSlider;
 	AudioStreamer *streamer;
 	NSTimer *progressUpdateTimer;
 }
@@ -29,6 +30,7 @@
 - (IBAction)buttonPressed:(id)sender;
 - (void)spinButton;
 - (void)updateProgress:(NSTimer *)aNotification;
+- (IBAction)sliderMoved:(UISlider *)aSlider;
 
 @end
 
