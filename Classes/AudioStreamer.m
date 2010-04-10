@@ -1938,6 +1938,7 @@ cleanup:
 	}
 	else if (inInterruptionState == kAudioSessionEndInterruption)
 	{
+		AudioSessionSetActive( true );
 		[self pause];
 	}
 }
