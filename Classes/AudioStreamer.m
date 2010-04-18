@@ -1402,7 +1402,7 @@ cleanup:
 			// AudioFileStream stays a small amount ahead of the AudioQueue to
 			// avoid an audio glitch playing streaming files on iPhone SDKs < 3.0
 			//
-			if (AS_FLUSHING_EOF || buffersUsed == kNumAQBufs - 1)
+			if (state == AS_FLUSHING_EOF || buffersUsed == kNumAQBufs - 1)
 			{
 				if (self.state == AS_BUFFERING)
 				{
