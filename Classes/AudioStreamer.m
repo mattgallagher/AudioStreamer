@@ -347,6 +347,37 @@ void ASReadStreamCallBack
 	return AS_AUDIO_STREAMER_FAILED_STRING;
 }
 
+-(void)presentAlertWithTitle:(NSString*)title message:(NSString*)message {
+#ifdef TARGET_OS_IPHONE
+	UIAlertView *alert = [
+		[[UIAlertView alloc]
+			initWithTitle:title
+			message:message
+			delegate:self
+			cancelButtonTitle:NSLocalizedString(@"OK", @"")
+			otherButtonTitles: nil]
+		autorelease];
+	[alert
+		performSelector:@selector(show)
+		onThread:[NSThread mainThread]
+		withObject:nil
+		waitUntilDone:NO];
+#else
+	NSAlert *alert =
+		[NSAlert
+			alertWithMessageText:title
+			defaultButton:NSLocalizedString(@"OK", @"")
+			alternateButton:nil
+			otherButton:nil
+			informativeTextWithFormat:message];
+	[alert
+		performSelector:@selector(runModal)
+		onThread:[NSThread mainThread]
+		withObject:nil
+		waitUntilDone:NO];
+#endif
+}
+
 //
 // failWithErrorCode:
 //
@@ -389,34 +420,8 @@ void ASReadStreamCallBack
 			AudioQueueStop(audioQueue, true);
 		}
 
-#ifdef TARGET_OS_IPHONE			
-		UIAlertView *alert =
-			[[[UIAlertView alloc]
-				initWithTitle:NSLocalizedStringFromTable(@"Audio Error", @"Errors", nil)
-				message:NSLocalizedStringFromTable([AudioStreamer stringForErrorCode:self.errorCode], @"Errors", nil)
-				delegate:self
-				cancelButtonTitle:@"OK"
-				otherButtonTitles: nil]
-			autorelease];
-		[alert 
-			performSelector:@selector(show)
-			onThread:[NSThread mainThread]
-			withObject:nil
-			waitUntilDone:NO];
-#else
-		NSAlert *alert =
-			[NSAlert
-				alertWithMessageText:NSLocalizedString(@"Audio Error", @"")
-				defaultButton:NSLocalizedString(@"OK", @"")
-				alternateButton:nil
-				otherButton:nil
-				informativeTextWithFormat:[AudioStreamer stringForErrorCode:self.errorCode]];
-		[alert
-			performSelector:@selector(runModal)
-			onThread:[NSThread mainThread]
-			withObject:nil
-			waitUntilDone:NO];
-#endif
+		[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+							message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
 	}
 }
 
@@ -624,34 +629,8 @@ void ASReadStreamCallBack
 			kCFStreamPropertyHTTPShouldAutoredirect,
 			kCFBooleanTrue) == false)
 		{
-#ifdef TARGET_OS_IPHONE
-			UIAlertView *alert =
-				[[UIAlertView alloc]
-					initWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-					message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)
-					delegate:self
-					cancelButtonTitle:@"OK"
-					otherButtonTitles: nil];
-			[alert
-				performSelector:@selector(show)
-				onThread:[NSThread mainThread]
-				withObject:nil
-				waitUntilDone:YES];
-			[alert release];
-#else
-		NSAlert *alert =
-			[NSAlert
-				alertWithMessageText:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-				defaultButton:NSLocalizedString(@"OK", @"")
-				alternateButton:nil
-				otherButton:nil
-				informativeTextWithFormat:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
-		[alert
-			performSelector:@selector(runModal)
-			onThread:[NSThread mainThread]
-			withObject:nil
-			waitUntilDone:NO];
-#endif
+			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
 			return NO;
 		}
 		
@@ -684,34 +663,8 @@ void ASReadStreamCallBack
 		if (!CFReadStreamOpen(stream))
 		{
 			CFRelease(stream);
-#ifdef TARGET_OS_IPHONE
-			UIAlertView *alert =
-				[[UIAlertView alloc]
-					initWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-					message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)
-					delegate:self
-					cancelButtonTitle:@"OK"
-					otherButtonTitles: nil];
-			[alert
-				performSelector:@selector(show)
-				onThread:[NSThread mainThread]
-				withObject:nil
-				waitUntilDone:YES];
-			[alert release];
-#else
-		NSAlert *alert =
-			[NSAlert
-				alertWithMessageText:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-				defaultButton:NSLocalizedString(@"OK", @"")
-				alternateButton:nil
-				otherButton:nil
-				informativeTextWithFormat:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
-		[alert
-			performSelector:@selector(runModal)
-			onThread:[NSThread mainThread]
-			withObject:nil
-			waitUntilDone:NO];
-#endif
+			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
 			return NO;
 		}
 		
