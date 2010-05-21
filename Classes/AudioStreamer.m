@@ -348,7 +348,17 @@ void ASReadStreamCallBack
 	return AS_AUDIO_STREAMER_FAILED_STRING;
 }
 
--(void)presentAlertWithTitle:(NSString*)title message:(NSString*)message {
+//
+// presentAlertWithTitle:message:
+//
+// Common code for presenting error dialogs
+//
+// Parameters:
+//    title - title for the dialog
+//    message - main test for the dialog
+//
+- (void)presentAlertWithTitle:(NSString*)title message:(NSString*)message
+{
 #ifdef TARGET_OS_IPHONE
 	UIAlertView *alert = [
 		[[UIAlertView alloc]
@@ -426,6 +436,12 @@ void ASReadStreamCallBack
 	}
 }
 
+//
+// mainThreadStateNotification
+//
+// Method invoked on main thread to send notifications to the main thread's
+// notification center.
+//
 - (void)mainThreadStateNotification
 {
 	NSNotification *notification =
