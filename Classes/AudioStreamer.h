@@ -148,6 +148,8 @@ extern NSString * const ASStatusChangedNotification;
 	UInt64 processedPacketsSizeTotal;	// byte size of accumulated estimation packets
 
 	double seekTime;
+	BOOL seekWasRequested;
+	double requestedSeekTime;
 	double sampleRate;			// Sample rate of the file (used to compare with
 								// samples played by the queue for current playback
 								// time)

@@ -64,6 +64,7 @@ NSString * const AS_AUDIO_BUFFER_TOO_SMALL_STRING = @"Audio packets are larger t
 - (void)handleInterruptionChangeToState:(AudioQueuePropertyID)inInterruptionState;
 #endif
 
+- (void)internalSeekToTime:(double)newSeekTime;
 - (void)enqueueBuffer;
 - (void)handleReadFromStream:(CFReadStreamRef)aStream
 	eventType:(CFStreamEventType)eventType;
@@ -347,6 +348,37 @@ void ASReadStreamCallBack
 	return AS_AUDIO_STREAMER_FAILED_STRING;
 }
 
+-(void)presentAlertWithTitle:(NSString*)title message:(NSString*)message {
+#ifdef TARGET_OS_IPHONE
+	UIAlertView *alert = [
+		[[UIAlertView alloc]
+			initWithTitle:title
+			message:message
+			delegate:self
+			cancelButtonTitle:NSLocalizedString(@"OK", @"")
+			otherButtonTitles: nil]
+		autorelease];
+	[alert
+		performSelector:@selector(show)
+		onThread:[NSThread mainThread]
+		withObject:nil
+		waitUntilDone:NO];
+#else
+	NSAlert *alert =
+		[NSAlert
+			alertWithMessageText:title
+			defaultButton:NSLocalizedString(@"OK", @"")
+			alternateButton:nil
+			otherButton:nil
+			informativeTextWithFormat:message];
+	[alert
+		performSelector:@selector(runModal)
+		onThread:[NSThread mainThread]
+		withObject:nil
+		waitUntilDone:NO];
+#endif
+}
+
 //
 // failWithErrorCode:
 //
@@ -389,34 +421,8 @@ void ASReadStreamCallBack
 			AudioQueueStop(audioQueue, true);
 		}
 
-#ifdef TARGET_OS_IPHONE			
-		UIAlertView *alert =
-			[[[UIAlertView alloc]
-				initWithTitle:NSLocalizedStringFromTable(@"Audio Error", @"Errors", nil)
-				message:NSLocalizedStringFromTable([AudioStreamer stringForErrorCode:self.errorCode], @"Errors", nil)
-				delegate:self
-				cancelButtonTitle:@"OK"
-				otherButtonTitles: nil]
-			autorelease];
-		[alert 
-			performSelector:@selector(show)
-			onThread:[NSThread mainThread]
-			withObject:nil
-			waitUntilDone:NO];
-#else
-		NSAlert *alert =
-			[NSAlert
-				alertWithMessageText:NSLocalizedString(@"Audio Error", @"")
-				defaultButton:NSLocalizedString(@"OK", @"")
-				alternateButton:nil
-				otherButton:nil
-				informativeTextWithFormat:[AudioStreamer stringForErrorCode:self.errorCode]];
-		[alert
-			performSelector:@selector(runModal)
-			onThread:[NSThread mainThread]
-			withObject:nil
-			waitUntilDone:NO];
-#endif
+		[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+							message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
 	}
 }
 
@@ -624,34 +630,8 @@ void ASReadStreamCallBack
 			kCFStreamPropertyHTTPShouldAutoredirect,
 			kCFBooleanTrue) == false)
 		{
-#ifdef TARGET_OS_IPHONE
-			UIAlertView *alert =
-				[[UIAlertView alloc]
-					initWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-					message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)
-					delegate:self
-					cancelButtonTitle:@"OK"
-					otherButtonTitles: nil];
-			[alert
-				performSelector:@selector(show)
-				onThread:[NSThread mainThread]
-				withObject:nil
-				waitUntilDone:YES];
-			[alert release];
-#else
-		NSAlert *alert =
-			[NSAlert
-				alertWithMessageText:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-				defaultButton:NSLocalizedString(@"OK", @"")
-				alternateButton:nil
-				otherButton:nil
-				informativeTextWithFormat:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
-		[alert
-			performSelector:@selector(runModal)
-			onThread:[NSThread mainThread]
-			withObject:nil
-			waitUntilDone:NO];
-#endif
+			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
 			return NO;
 		}
 		
@@ -684,34 +664,8 @@ void ASReadStreamCallBack
 		if (!CFReadStreamOpen(stream))
 		{
 			CFRelease(stream);
-#ifdef TARGET_OS_IPHONE
-			UIAlertView *alert =
-				[[UIAlertView alloc]
-					initWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-					message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)
-					delegate:self
-					cancelButtonTitle:@"OK"
-					otherButtonTitles: nil];
-			[alert
-				performSelector:@selector(show)
-				onThread:[NSThread mainThread]
-				withObject:nil
-				waitUntilDone:YES];
-			[alert release];
-#else
-		NSAlert *alert =
-			[NSAlert
-				alertWithMessageText:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-				defaultButton:NSLocalizedString(@"OK", @"")
-				alternateButton:nil
-				otherButton:nil
-				informativeTextWithFormat:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
-		[alert
-			performSelector:@selector(runModal)
-			onThread:[NSThread mainThread]
-			withObject:nil
-			waitUntilDone:NO];
-#endif
+			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
 			return NO;
 		}
 		
@@ -812,6 +766,13 @@ void ASReadStreamCallBack
 		isRunning = [[NSRunLoop currentRunLoop]
 			runMode:NSDefaultRunLoopMode
 			beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.25]];
+		
+		@synchronized(self) {
+			if (seekWasRequested) {
+				[self internalSeekToTime:requestedSeekTime];
+				seekWasRequested = NO;
+			}
+		}
 		
 		//
 		// If there are no queued buffers, we need to check here since the
@@ -923,6 +884,86 @@ cleanup:
 	}
 }
 
+
+// internalSeekToTime:
+//
+// Called from our internal runloop to reopen the stream at a seeked location
+//
+- (void)internalSeekToTime:(double)newSeekTime
+{
+	if ([self calculatedBitRate] == 0.0 || fileLength <= 0)
+	{
+		return;
+	}
+	
+	//
+	// Calculate the byte offset for seeking
+	//
+	seekByteOffset = dataOffset +
+		(newSeekTime / self.duration) * (fileLength - dataOffset);
+		
+	//
+	// Attempt to leave 1 useful packet at the end of the file (although in
+	// reality, this may still seek too far if the file has a long trailer).
+	//
+	if (seekByteOffset > fileLength - 2 * packetBufferSize)
+	{
+		seekByteOffset = fileLength - 2 * packetBufferSize;
+	}
+	
+	//
+	// Store the old time from the audio queue and the time that we're seeking
+	// to so that we'll know the correct time progress after seeking.
+	//
+	seekTime = newSeekTime;
+	
+	//
+	// Attempt to align the seek with a packet boundary
+	//
+	double calculatedBitRate = [self calculatedBitRate];
+	if (packetDuration > 0 &&
+		calculatedBitRate > 0)
+	{
+		UInt32 ioFlags = 0;
+		SInt64 packetAlignedByteOffset;
+		SInt64 seekPacket = floor(newSeekTime / packetDuration);
+		err = AudioFileStreamSeek(audioFileStream, seekPacket, &packetAlignedByteOffset, &ioFlags);
+		if (!err && !(ioFlags & kAudioFileStreamSeekFlag_OffsetIsEstimated))
+		{
+			seekTime -= ((seekByteOffset - dataOffset) - packetAlignedByteOffset) * 8.0 / calculatedBitRate;
+			seekByteOffset = packetAlignedByteOffset + dataOffset;
+		}
+	}
+
+	//
+	// Close the current read straem
+	//
+	if (stream)
+	{
+		CFReadStreamClose(stream);
+		CFRelease(stream);
+		stream = nil;
+	}
+
+	//
+	// Stop the audio queue
+	//
+	self.state = AS_STOPPING;
+	stopReason = AS_STOPPING_TEMPORARILY;
+	err = AudioQueueStop(audioQueue, true);
+	if (err)
+	{
+		[self failWithErrorCode:AS_AUDIO_QUEUE_STOP_FAILED];
+		return;
+	}
+
+	//
+	// Re-open the file stream. It will request a byte-range starting at
+	// seekByteOffset.
+	//
+	[self openReadStream];
+}
+
 //
 // seekToTime:
 //
@@ -936,81 +977,8 @@ cleanup:
 {
 	@synchronized(self)
 	{
-		if ([self calculatedBitRate] == 0.0 || fileLength <= 0)
-		{
-			return;
-		}
-		
-		//
-		// Calculate the byte offset for seeking
-		//
-		seekByteOffset = dataOffset +
-			(newSeekTime / self.duration) * (fileLength - dataOffset);
-			
-		//
-		// Attempt to leave 1 useful packet at the end of the file (although in
-		// reality, this may still seek too far if the file has a long trailer).
-		//
-		if (seekByteOffset > fileLength - 2 * packetBufferSize)
-		{
-			seekByteOffset = fileLength - 2 * packetBufferSize;
-		}
-		
-		//
-		// Store the old time from the audio queue and the time that we're seeking
-		// to so that we'll know the correct time progress after seeking.
-		//
-		seekTime = newSeekTime;
-		
-		//
-		// Attempt to align the seek with a packet boundary
-		//
-		double calculatedBitRate = [self calculatedBitRate];
-		if (packetDuration > 0 &&
-			calculatedBitRate > 0)
-		{
-			UInt32 ioFlags = 0;
-			SInt64 packetAlignedByteOffset;
-			SInt64 seekPacket = floor(newSeekTime / packetDuration);
-			err = AudioFileStreamSeek(audioFileStream, seekPacket, &packetAlignedByteOffset, &ioFlags);
-			if (!err && !(ioFlags & kAudioFileStreamSeekFlag_OffsetIsEstimated))
-			{
-				seekTime -= ((seekByteOffset - dataOffset) - packetAlignedByteOffset) * 8.0 / calculatedBitRate;
-				seekByteOffset = packetAlignedByteOffset + dataOffset;
-			}
-		}
-
-		//
-		// Close the current read straem
-		//
-		if (stream)
-		{
-			CFReadStreamClose(stream);
-			CFRelease(stream);
-			stream = nil;
-		}
-
-		//
-		// Stop the audio queue
-		//
-		self.state = AS_STOPPING;
-		stopReason = AS_STOPPING_TEMPORARILY;
-		err = AudioQueueStop(audioQueue, true);
-		if (err)
-		{
-			[self failWithErrorCode:AS_AUDIO_QUEUE_STOP_FAILED];
-			return;
-		}
-
-		//
-		// Re-open the file stream. It will request a byte-range starting at
-		// seekByteOffset.
-		//
-		[self
-			performSelector:@selector(openReadStream)
-			onThread:internalThread
-			withObject:nil
-			waitUntilDone:NO];
+		seekWasRequested = YES;
+		requestedSeekTime = newSeekTime;
 	}
 }
 
@@ -1165,6 +1133,7 @@ cleanup:
 			self.state = AS_STOPPED;
 			stopReason = AS_STOPPING_USER_ACTION;
 		}
+		seekWasRequested = NO;
 	}
 	
 	while (state != AS_INITIALIZED)
