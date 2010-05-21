@@ -1035,7 +1035,7 @@ cleanup:
 			Boolean discontinuity;
 			err = AudioQueueGetCurrentTime(audioQueue, NULL, &queueTime, &discontinuity);
 
-			const OSStatus AudioQueueStopped = 0x73746F70;
+			const OSStatus AudioQueueStopped = 0x73746F70; // 0x73746F70 is 'stop'
 			if (err == AudioQueueStopped)
 			{
 				return lastProgress;
