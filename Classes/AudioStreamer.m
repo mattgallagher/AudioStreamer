@@ -863,8 +863,8 @@ cleanup:
 		packetBufferSize = 0;
 		self.state = AS_INITIALIZED;
 
-		internalThread = nil;
 		[internalThread release];
+		internalThread = nil;
 	}
 
 	[pool release];
@@ -1159,7 +1159,7 @@ cleanup:
 }
 
 //
-// handleReadFromStream:eventType:data:
+// handleReadFromStream:eventType:
 //
 // Reads data from the network file stream into the AudioFileStream
 //
