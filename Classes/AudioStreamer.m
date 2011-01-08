@@ -1731,7 +1731,7 @@ cleanup:
 				// If there was some kind of issue with enqueueBuffer and we didn't
 				// make space for the new audio data then back out
 				//
-				if (bytesFilled + packetSize >= packetBufferSize)
+				if (bytesFilled + packetSize > packetBufferSize)
 				{
 					return;
 				}
@@ -1791,7 +1791,7 @@ cleanup:
 				// If there was some kind of issue with enqueueBuffer and we didn't
 				// make space for the new audio data then back out
 				//
-				if (bytesFilled >= packetBufferSize)
+				if (bytesFilled > packetBufferSize)
 				{
 					return;
 				}
@@ -1921,16 +1921,25 @@ cleanup:
 //    inAQ - the audio queue
 //    inID - the property ID
 //
-- (void)handleInterruptionChangeToState:(AudioQueuePropertyID)inInterruptionState
+- (void)handleInterruptionChangeToState:(AudioQueuePropertyID)inInterruptionState 
 {
 	if (inInterruptionState == kAudioSessionBeginInterruption)
-	{
-		[self pause];
+	{ 
+		if ([self isPlaying]) {
+			[self pause];
+			
+			pausedByInterruption = YES; 
+		} 
 	}
-	else if (inInterruptionState == kAudioSessionEndInterruption)
+	else if (inInterruptionState == kAudioSessionEndInterruption) 
 	{
 		AudioSessionSetActive( true );
-		[self pause];
+		
+		if ([self isPaused] && pausedByInterruption) {
+			[self pause]; // this is actually resume
+			
+			pausedByInterruption = NO; // this is redundant 
+		}
 	}
 }
 #endif

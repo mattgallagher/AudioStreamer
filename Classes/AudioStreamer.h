@@ -155,6 +155,9 @@ extern NSString * const ASStatusChangedNotification;
 								// time)
 	double packetDuration;		// sample rate times frames per packet
 	double lastProgress;		// last calculated progress point
+#ifdef TARGET_OS_IPHONE
+	BOOL pausedByInterruption;
+#endif
 }
 
 @property AudioStreamerErrorCode errorCode;
