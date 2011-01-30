@@ -12,7 +12,7 @@
 //  appreciated but not required.
 //
 
-#ifdef TARGET_OS_IPHONE			
+#if TARGET_OS_IPHONE			
 #import <UIKit/UIKit.h>
 #else
 #import <Cocoa/Cocoa.h>
@@ -155,7 +155,7 @@ extern NSString * const ASStatusChangedNotification;
 								// time)
 	double packetDuration;		// sample rate times frames per packet
 	double lastProgress;		// last calculated progress point
-#ifdef TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE
 	BOOL pausedByInterruption;
 #endif
 }
