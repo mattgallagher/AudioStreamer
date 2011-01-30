@@ -225,6 +225,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
 				INFOPLIST_FILE = iPhoneInfo.plist;
+				OTHER_CFLAGS = "-DSHOUTCAST_METADATA=1";
 				PRODUCT_NAME = iPhoneStreamingPlayer;
 			};
 			name = Debug;
@@ -237,6 +238,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
 				INFOPLIST_FILE = iPhoneInfo.plist;
+				OTHER_CFLAGS = "-DSHOUTCAST_METADATA=1";
 				PRODUCT_NAME = iPhoneStreamingPlayer;
 			};
 			name = Release;

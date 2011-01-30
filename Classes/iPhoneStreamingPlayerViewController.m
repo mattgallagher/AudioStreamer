@@ -12,6 +12,7 @@
 //  appreciated but not required.
 //
 
+#import "iPhoneStreamingPlayerAppDelegate.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "AudioStreamer.h"
 #import <QuartzCore/CoreAnimation.h>
@@ -109,6 +110,13 @@
 		selector:@selector(playbackStateChanged:)
 		name:ASStatusChangedNotification
 		object:streamer];
+#ifdef SHOUTCAST_METADATA
+	[[NSNotificationCenter defaultCenter]
+	 addObserver:self
+	 selector:@selector(metadataChanged:)
+	 name:ASUpdateMetadataNotification
+	 object:streamer];
+#endif
 }
 
 //
@@ -127,6 +135,23 @@
 	[volumeView sizeToFit];
 	
 	[self setButtonImage:[UIImage imageNamed:@"playbutton.png"]];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+	[self becomeFirstResponder]; // this enables listening for events
+	// update the UI in case we were in the background
+	NSNotification *notification =
+	[NSNotification
+	 notificationWithName:ASStatusChangedNotification
+	 object:self];
+	[[NSNotificationCenter defaultCenter]
+	 postNotification:notification];
+}
+
+- (BOOL)canBecomeFirstResponder {
+	return YES;
 }
 
 //
@@ -243,6 +268,55 @@
 	}
 }
 
+#ifdef SHOUTCAST_METADATA
+/** Example metadata
+ * 
+ StreamTitle='Kim Sozzi / Amuka / Livvi Franc - Secret Love / It's Over / Automatik',
+ StreamUrl='&artist=Kim%20Sozzi%20%2F%20Amuka%20%2F%20Livvi%20Franc&title=Secret%20Love%20%2F%20It%27s%20Over%20%2F%20Automatik&album=&duration=1133453&songtype=S&overlay=no&buycd=&website=&picture=',
+
+ Format is generally "Artist hypen Title" although servers may deliver only one. This code assumes 1 field is artist.
+ */
+- (void)metadataChanged:(NSNotification *)aNotification
+{
+	NSString *streamArtist;
+	NSString *streamTitle;
+	NSArray *metaParts = [[[aNotification userInfo] objectForKey:@"metadata"] componentsSeparatedByString:@";"];
+	NSString *item;
+	NSMutableDictionary *hash = [[NSMutableDictionary alloc] init];
+	for (item in metaParts) {
+		// split the key/value pair
+		NSArray *pair = [item componentsSeparatedByString:@"="];
+		// don't bother with bad metadata
+		if ([pair count] == 2)
+			[hash setObject:[pair objectAtIndex:1] forKey:[pair objectAtIndex:0]];
+	}
+
+	// do something with the StreamTitle
+	NSString *streamString = [[hash objectForKey:@"StreamTitle"] stringByReplacingOccurrencesOfString:@"'" withString:@""];
+	
+	NSArray *streamParts = [streamString componentsSeparatedByString:@" - "];
+	if ([streamParts count] > 0) {
+		streamArtist = [streamParts objectAtIndex:0];
+	} else {
+		streamArtist = @"";
+	}
+	// this looks odd but not every server will have all artist hyphen title
+	if ([streamParts count] >= 2) {
+		streamTitle = [streamParts objectAtIndex:1];
+	} else {
+		streamTitle = @"";
+	}
+	NSLog(@"%@ by %@", streamTitle, streamArtist);
+
+	// only update the UI if in foreground
+	iPhoneStreamingPlayerAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+	if (appDelegate.uiIsVisible) {
+		metadataArtist.text = streamArtist;
+		metadataTitle.text = streamTitle;
+	}
+}
+#endif
+
 //
 // updateProgress:
 //
@@ -307,6 +381,32 @@
 		progressUpdateTimer = nil;
 	}
 	[super dealloc];
+}
+
+#pragma mark Remote Control Events
+/* The iPod controls will send these events when the app is in the background */
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+	switch (event.subtype) {
+		case UIEventSubtypeRemoteControlTogglePlayPause:
+			if ([streamer isPlaying])
+				[streamer stop];
+			else {
+				[self createStreamer];
+				[streamer start];
+			}
+			break;
+		case UIEventSubtypeRemoteControlPlay:
+			[streamer start];
+			break;
+		case UIEventSubtypeRemoteControlPause:
+			[streamer pause];
+			break;
+		case UIEventSubtypeRemoteControlStop:
+			[streamer stop];
+			break;
+		default:
+			break;
+	}
 }
 
 @end
