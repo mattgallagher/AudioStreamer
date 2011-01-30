@@ -98,10 +98,8 @@ typedef enum
 
 extern NSString * const ASStatusChangedNotification;
 extern NSString * const ASPresentAlertWithTitleNotification;
-
-#ifdef SHOUTCAST_METADATA
+// Shoutcast metadata notification. Must set retrieveShoutcastMetaData to YES to receive this notification.
 extern NSString * const ASUpdateMetadataNotification;
-#endif
 
 @interface AudioStreamer : NSObject
 {
@@ -164,7 +162,8 @@ extern NSString * const ASUpdateMetadataNotification;
 	BOOL pausedByInterruption;
 #endif
 
-#ifdef SHOUTCAST_METADATA
+   // Shoutcast metadata -- begin --
+   BOOL retrieveShoutcastMetaData;
 	BOOL foundIcyStart;
 	BOOL foundIcyEnd;
 	BOOL parsedHeaders;
@@ -172,7 +171,7 @@ extern NSString * const ASUpdateMetadataNotification;
 	unsigned int metaDataBytesRemaining;	// how many bytes of metadata remain to be read
 	unsigned int dataBytesRead;							// how many bytes of data have been read
 	NSMutableString *metaDataString;			// the metaDataString
-#endif
+   // Shoutcast metadata -- end --
 }
 
 @property AudioStreamerErrorCode errorCode;
@@ -181,6 +180,7 @@ extern NSString * const ASUpdateMetadataNotification;
 @property (readonly) double duration;
 @property (readwrite) UInt32 bitRate;
 @property (readonly) NSDictionary *httpHeaders;
+@property (assign) BOOL retrieveShoutcastMetaData;
 
 - (id)initWithURL:(NSURL *)aURL;
 - (void)start;

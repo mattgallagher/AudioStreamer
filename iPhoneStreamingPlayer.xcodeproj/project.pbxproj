@@ -73,8 +73,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				C9C2D8780EB6E09C00A3D071 /* AudioStreamer.m */,
 				C9C2D8790EB6E09C00A3D071 /* AudioStreamer.h */,
+				C9C2D8780EB6E09C00A3D071 /* AudioStreamer.m */,
 				1D3623240D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.h */,
 				1D3623250D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m */,
 				28D7ACF60DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.h */,
@@ -225,7 +225,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
 				INFOPLIST_FILE = iPhoneInfo.plist;
-				OTHER_CFLAGS = "-DSHOUTCAST_METADATA=1";
+				OTHER_CFLAGS = "";
 				PRODUCT_NAME = iPhoneStreamingPlayer;
 			};
 			name = Debug;
@@ -238,7 +238,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
 				INFOPLIST_FILE = iPhoneInfo.plist;
-				OTHER_CFLAGS = "-DSHOUTCAST_METADATA=1";
+				OTHER_CFLAGS = "";
 				PRODUCT_NAME = iPhoneStreamingPlayer;
 			};
 			name = Release;

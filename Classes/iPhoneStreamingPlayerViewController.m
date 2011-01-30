@@ -110,13 +110,14 @@
 		selector:@selector(playbackStateChanged:)
 		name:ASStatusChangedNotification
 		object:streamer];
-#ifdef SHOUTCAST_METADATA
+
+   // Enable shoutcast metadata retrieval.
+   [streamer setRetrieveShoutcastMetaData:YES];
 	[[NSNotificationCenter defaultCenter]
 	 addObserver:self
 	 selector:@selector(metadataChanged:)
 	 name:ASUpdateMetadataNotification
 	 object:streamer];
-#endif
 }
 
 //
@@ -268,7 +269,6 @@
 	}
 }
 
-#ifdef SHOUTCAST_METADATA
 /** Example metadata
  * 
  StreamTitle='Kim Sozzi / Amuka / Livvi Franc - Secret Love / It's Over / Automatik',
@@ -315,7 +315,6 @@
 		metadataTitle.text = streamTitle;
 	}
 }
-#endif
 
 //
 // updateProgress:
