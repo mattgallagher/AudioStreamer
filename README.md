@@ -6,6 +6,11 @@ This is a fork of the [mattgallagher/AudioStreamer](https://github.com/mattgalla
 History
 -------
 
+April 12, 2001
+  * Updated AudioStream with the latest from [mattgallagher/AudioStreamer](https://github.com/mattgallagher/AudioStreamer).
+  * Added level meter code from [idevsoftware/AudioStreamer](https://github.com/idevsoftware/AudioStreamer)
+  * Added level meter display to the sample projects.
+
 January 30, 2011
 
   * Forked [mattgallagher/AudioStreamer](https://github.com/mattgallagher/AudioStreamer).
