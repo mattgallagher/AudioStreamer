@@ -374,14 +374,42 @@ void ASReadStreamCallBack
 //
 - (void)presentAlertWithTitle:(NSString*)title message:(NSString*)message
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, @"title", message, @"message", nil];
-	NSNotification *notification =
-	[NSNotification
-	 notificationWithName:ASPresentAlertWithTitleNotification
-	 object:self
-	 userInfo:userInfo];
-	[[NSNotificationCenter defaultCenter]
-	 postNotification:notification];
+   // Modification from the original to post a notification
+   // when an error occurs. The original code is commented
+   // below. Uncomment it if you prefer to have the audio
+   // stream display the alert message.
+   NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, @"title", message, @"message", nil];
+   NSNotification *notification = [NSNotification notificationWithName:ASPresentAlertWithTitleNotification object:self userInfo:userInfo];
+   [[NSNotificationCenter defaultCenter] postNotification:notification];
+   
+//#if TARGET_OS_IPHONE
+//	UIAlertView *alert = [
+//                         [[UIAlertView alloc]
+//                          initWithTitle:title
+//                          message:message
+//                          delegate:self
+//                          cancelButtonTitle:NSLocalizedString(@"OK", @"")
+//                          otherButtonTitles: nil]
+//                         autorelease];
+//	[alert
+//    performSelector:@selector(show)
+//    onThread:[NSThread mainThread]
+//    withObject:nil
+//    waitUntilDone:NO];
+//#else
+//	NSAlert *alert =
+//   [NSAlert
+//    alertWithMessageText:title
+//    defaultButton:NSLocalizedString(@"OK", @"")
+//    alternateButton:nil
+//    otherButton:nil
+//    informativeTextWithFormat:message];
+//	[alert
+//    performSelector:@selector(runModal)
+//    onThread:[NSThread mainThread]
+//    withObject:nil
+//    waitUntilDone:NO];
+//#endif   
 }
 
 //
@@ -1136,8 +1164,6 @@ cleanup:
 {
 	@synchronized(self)
 	{
-		if (state == AS_WAITING_FOR_DATA || state == AS_STARTING_FILE_THREAD)
-			return;
 		if (audioQueue &&
 			(state == AS_PLAYING || state == AS_PAUSED ||
 				state == AS_BUFFERING || state == AS_WAITING_FOR_QUEUE_TO_START))
