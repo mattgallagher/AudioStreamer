@@ -14,15 +14,15 @@
 @implementation LevelMeterView
 
 
+#if TARGET_OS_IPHONE
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
         // Initialization code
-#if TARGET_OS_IPHONE
 		self.backgroundColor = [UIColor blackColor];
-#endif
     }
     return self;
 }
+#endif
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
@@ -63,8 +63,8 @@ static CGColorRef CGColorCreateFromNSColor (CGColorSpaceRef colorSpace, NSColor 
     [NSFont systemFontOfSize:14], NSFontAttributeName, 
     nil];
 	
-   [@"L" drawInRect:CGRectMake(0.0, 35.0, 15.0, 15.0) withAttributes:attribDict];
-   [@"R" drawInRect:CGRectMake(0.0, 10.0, 15.0, 15.0) withAttributes:attribDict];
+   [@"L" drawInRect:NSRectFromCGRect(CGRectMake(0.0, 35.0, 15.0, 15.0)) withAttributes:attribDict];
+   [@"R" drawInRect:NSRectFromCGRect(CGRectMake(0.0, 10.0, 15.0, 15.0)) withAttributes:attribDict];
    
    // Draw the level meter.
    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
