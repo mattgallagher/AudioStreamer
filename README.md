@@ -7,6 +7,7 @@ History
 -------
 
 April 12, 2001
+
   * Updated AudioStream with the latest from [mattgallagher/AudioStreamer](https://github.com/mattgallagher/AudioStreamer).
   * Added level meter code from [idevsoftware/AudioStreamer](https://github.com/idevsoftware/AudioStreamer)
   * Added level meter display to the sample projects.
