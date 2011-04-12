@@ -13,6 +13,7 @@
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
 		28D7ACF80DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m */; };
+		6802B77E13549F2B0029B836 /* LevelMeterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6802B77D13549F2B0029B836 /* LevelMeterView.m */; };
 		C9423DF10EF8AA6B003B785B /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9423DF00EF8AA6B003B785B /* CFNetwork.framework */; };
 		C9AB93E20FCF816F0047C0FA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AB93E10FCF816F0047C0FA /* AudioToolbox.framework */; };
 		C9AB93F30FCF81790047C0FA /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AB93F20FCF81790047C0FA /* MediaPlayer.framework */; };
@@ -37,6 +38,8 @@
 		28D7ACF70DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iPhoneStreamingPlayerViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* iPhoneStreamingPlayer_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneStreamingPlayer_Prefix.pch; sourceTree = "<group>"; };
+		6802B77C13549F2B0029B836 /* LevelMeterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelMeterView.h; sourceTree = "<group>"; };
+		6802B77D13549F2B0029B836 /* LevelMeterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LevelMeterView.m; sourceTree = "<group>"; };
 		C9423DF00EF8AA6B003B785B /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		C9AB93E10FCF816F0047C0FA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C9AB93F20FCF81790047C0FA /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
@@ -79,6 +82,8 @@
 				1D3623250D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m */,
 				28D7ACF60DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.h */,
 				28D7ACF70DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m */,
+				6802B77C13549F2B0029B836 /* LevelMeterView.h */,
+				6802B77D13549F2B0029B836 /* LevelMeterView.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -209,6 +214,7 @@
 				1D3623260D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m in Sources */,
 				28D7ACF80DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m in Sources */,
 				C9C2D87A0EB6E09C00A3D071 /* AudioStreamer.m in Sources */,
+				6802B77E13549F2B0029B836 /* LevelMeterView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +257,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
@@ -266,6 +273,7 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		6802B7811354A36E0029B836 /* LevelMeterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6802B7801354A36E0029B836 /* LevelMeterView.m */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -29,6 +30,8 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		6802B77F1354A36E0029B836 /* LevelMeterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LevelMeterView.h; path = Classes/LevelMeterView.h; sourceTree = "<group>"; };
+		6802B7801354A36E0029B836 /* LevelMeterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LevelMeterView.m; path = Classes/LevelMeterView.m; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* StreamingAudioPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StreamingAudioPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9266EB70E8F1CCA00FFA634 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C92672FA0E905BBB00FFA634 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = /System/Library/Frameworks/QuartzCore.framework; sourceTree = "<absolute>"; };
@@ -63,6 +66,8 @@
 			children = (
 				C9E673740FE8C7340033BF43 /* MacStreamingPlayerController.m */,
 				C9E673750FE8C7340033BF43 /* MacStreamingPlayerController.h */,
+				6802B77F1354A36E0029B836 /* LevelMeterView.h */,
+				6802B7801354A36E0029B836 /* LevelMeterView.m */,
 				C9E6736E0FE8C6F80033BF43 /* AudioStreamer.h */,
 				C9E6736F0FE8C6F80033BF43 /* AudioStreamer.m */,
 			);
@@ -210,6 +215,7 @@
 				8D11072D0486CEB800E47090 /* main.m in Sources */,
 				C9E673700FE8C6F80033BF43 /* AudioStreamer.m in Sources */,
 				C9E673760FE8C7340033BF43 /* MacStreamingPlayerController.m in Sources */,
+				6802B7811354A36E0029B836 /* LevelMeterView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

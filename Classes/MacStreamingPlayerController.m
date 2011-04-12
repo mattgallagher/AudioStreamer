@@ -23,13 +23,17 @@
 
 #import "MacStreamingPlayerController.h"
 #import "AudioStreamer.h"
+#import "LevelMeterView.h"
 #import <QuartzCore/CoreAnimation.h>
 
 @implementation MacStreamingPlayerController
 
 - (void)awakeFromNib
 {
-	[downloadSourceField setStringValue:@"http://shoutmedia.abc.net.au:10326"];
+   // (KT) Changed URL to an MP3. Since AudioStreamer relies on the file extension
+   // to determine the media type and since this URL has no file extension, the 
+   // default type in AudioStreamer must be set to kAudioFileMP3Type.
+	[downloadSourceField setStringValue:@"http://scfire-dtc-aa06.stream.aol.com:80/stream/1018"];
 }
 
 //
@@ -116,6 +120,11 @@
 			selector:@selector(updateProgress:)
 			userInfo:nil
 			repeats:YES];
+	levelMeterUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:.1 
+                                                            target:self 
+                                                          selector:@selector(updateLevelMeters:) 
+                                                          userInfo:nil 
+                                                           repeats:YES];	
 	[[NSNotificationCenter defaultCenter]
 		addObserver:self
 		selector:@selector(playbackStateChanged:)
@@ -207,14 +216,20 @@
 {
 	if ([streamer isWaiting])
 	{
+		[levelMeterView updateMeterWithLeftValue:0.0 
+                                    rightValue:0.0];
+		[streamer setMeteringEnabled:NO];
 		[self setButtonImage:[NSImage imageNamed:@"loadingbutton"]];
 	}
 	else if ([streamer isPlaying])
 	{
+		[streamer setMeteringEnabled:YES];
 		[self setButtonImage:[NSImage imageNamed:@"stopbutton"]];
 	}
 	else if ([streamer isIdle])
 	{
+		[levelMeterView updateMeterWithLeftValue:0.0 
+                                    rightValue:0.0];
 		[self destroyStreamer];
 		[self setButtonImage:[NSImage imageNamed:@"playbutton"]];
 	}
@@ -267,6 +282,17 @@
 	else
 	{
 		[positionLabel setStringValue:@"Time Played:"];
+	}
+}
+
+//
+// updateLevelMeters:
+//
+
+- (void)updateLevelMeters:(NSTimer *)timer {
+	if([streamer isMeteringEnabled]) {
+		[levelMeterView updateMeterWithLeftValue:[streamer averagePowerForChannel:0] 
+                                    rightValue:[streamer averagePowerForChannel:([streamer numberOfChannels] > 1 ? 1 : 0)]];
 	}
 }
 

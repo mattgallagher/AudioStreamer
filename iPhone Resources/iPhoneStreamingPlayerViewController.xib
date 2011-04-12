@@ -56,7 +56,7 @@
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<int key="IBUIContentVerticalAlignment">0</int>
-						<string key="IBUIText">http://shoutmedia.abc.net.au:10326</string>
+						<string key="IBUIText">http://scfire-dtc-aa06.stream.aol.com:80/stream/1018</string>
 						<int key="IBUIBorderStyle">3</int>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">3</int>
@@ -147,7 +147,7 @@
 					<object class="IBUILabel" id="1000478862">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 356}, {280, 21}}</string>
+						<string key="NSFrame">{{20, 367}, {280, 21}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1067123130"/>
@@ -164,7 +164,7 @@
 					<object class="IBUIView" id="1067123130">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 385}, {280, 55}}</string>
+						<string key="NSFrame">{{20, 391}, {280, 55}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>

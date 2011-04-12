@@ -181,6 +181,12 @@ extern NSString * const ASUpdateMetadataNotification;
 	unsigned int dataBytesRead;							// how many bytes of data have been read
 	NSMutableString *metaDataString;			// the metaDataString
    // Shoutcast metadata -- end --
+   
+   // Level Meter support -- begin --
+   // Added by KT. Found in repo at: https://github.com/idevsoftware/AudioStreamer
+   UInt32 numberOfChannels;	// Number of audio channels in the stream (1 = mono, 2 = stereo)
+   // Level Meter support -- end --
+
 }
 
 @property AudioStreamerErrorCode errorCode;
@@ -190,6 +196,14 @@ extern NSString * const ASUpdateMetadataNotification;
 @property (readwrite) UInt32 bitRate;
 @property (readonly) NSDictionary *httpHeaders;
 @property (assign) BOOL retrieveShoutcastMetaData;
+
+// Level Meter support -- begin --
+// Added by KT. Found in repo at: https://github.com/idevsoftware/AudioStreamer
+@property (readonly) UInt32 numberOfChannels;
+@property (assign, getter=isMeteringEnabled) BOOL meteringEnabled;
+- (float)peakPowerForChannel:(NSUInteger)channelNumber;
+- (float)averagePowerForChannel:(NSUInteger)channelNumber;
+// Level Meter support -- end --
 
 - (id)initWithURL:(NSURL *)aURL;
 - (void)start;
