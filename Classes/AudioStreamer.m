@@ -249,7 +249,7 @@ void ASReadStreamCallBack
 {
 	[self stop];
 	[url release];
-    [fileExtension release];
+	[fileExtension release];
 	[super dealloc];
 }
 
@@ -1298,10 +1298,10 @@ cleanup:
 			//
 			// If you have a fixed file-type, you may want to hardcode this.
 			//
-            if (!self.fileExtension)
-            {
-                 self.fileExtension = [[url path] pathExtension];
-            }
+			if (!self.fileExtension)
+			{
+				self.fileExtension = [[url path] pathExtension];
+			}
 			AudioFileTypeID fileTypeHint =
 				[AudioStreamer hintForFileExtension:self.fileExtension];
 

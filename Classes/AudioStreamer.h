@@ -131,7 +131,7 @@ extern NSString * const ASStatusChangedNotification;
 	bool inuse[kNumAQBufs];			// flags to indicate that a buffer is still in use
 	NSInteger buffersUsed;
 	NSDictionary *httpHeaders;
-    NSString *fileExtension;
+	NSString *fileExtension;
 	
 	AudioStreamerState state;
 	AudioStreamerStopReason stopReason;
