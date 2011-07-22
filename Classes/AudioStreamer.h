@@ -131,6 +131,7 @@ extern NSString * const ASStatusChangedNotification;
 	bool inuse[kNumAQBufs];			// flags to indicate that a buffer is still in use
 	NSInteger buffersUsed;
 	NSDictionary *httpHeaders;
+    NSString *fileExtension;
 	
 	AudioStreamerState state;
 	AudioStreamerStopReason stopReason;
@@ -175,6 +176,7 @@ extern NSString * const ASStatusChangedNotification;
 @property (readonly) double duration;
 @property (readwrite) UInt32 bitRate;
 @property (readonly) NSDictionary *httpHeaders;
+@property (retain,readwrite) NSString *fileExtension;
 
 - (id)initWithURL:(NSURL *)aURL;
 - (void)start;
