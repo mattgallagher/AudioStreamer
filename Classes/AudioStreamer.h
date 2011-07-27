@@ -176,7 +176,7 @@ extern NSString * const ASStatusChangedNotification;
 @property (readonly) double duration;
 @property (readwrite) UInt32 bitRate;
 @property (readonly) NSDictionary *httpHeaders;
-@property (retain,readwrite) NSString *fileExtension;
+@property (copy,readwrite) NSString *fileExtension;
 
 - (id)initWithURL:(NSURL *)aURL;
 - (void)start;
