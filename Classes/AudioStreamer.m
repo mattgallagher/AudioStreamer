@@ -94,6 +94,7 @@ void MyPacketsProc(				void *							inClientData,
 								const void *					inInputData,
 								AudioStreamPacketDescription	*inPacketDescriptions);
 OSStatus MyEnqueueBuffer(AudioStreamer* myData);
+void ASReadStreamCallBack(CFReadStreamRef aStream, CFStreamEventType eventType, void* inClientInfo);
 
 #if TARGET_OS_IPHONE			
 void MyAudioSessionInterruptionListener(void *inClientData, UInt32 inInterruptionState);
@@ -459,6 +460,13 @@ void ASReadStreamCallBack
 			object:self];
 	[[NSNotificationCenter defaultCenter]
 		postNotification:notification];
+}
+
+// Getter
+- (AudioStreamerState)state {
+    @synchronized(self) {
+        return state;
+    }
 }
 
 //
