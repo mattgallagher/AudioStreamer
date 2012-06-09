@@ -21,8 +21,10 @@
 //     distribution.
 //
 
+#import "iPhoneStreamingPlayerAppDelegate.h"
 #import "iPhoneStreamingPlayerViewController.h"
 #import "AudioStreamer.h"
+#import "LevelMeterView.h"
 #import <QuartzCore/CoreAnimation.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <CFNetwork/CFNetwork.h>
@@ -113,11 +115,24 @@
 			selector:@selector(updateProgress:)
 			userInfo:nil
 			repeats:YES];
-	[[NSNotificationCenter defaultCenter]
+	levelMeterUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:.1 
+                                                            target:self 
+                                                          selector:@selector(updateLevelMeters:) 
+                                                          userInfo:nil 
+                                                           repeats:YES];	
+   [[NSNotificationCenter defaultCenter]
 		addObserver:self
 		selector:@selector(playbackStateChanged:)
 		name:ASStatusChangedNotification
 		object:streamer];
+
+   // Enable shoutcast metadata retrieval.
+   [streamer setRetrieveShoutcastMetaData:YES];
+	[[NSNotificationCenter defaultCenter]
+	 addObserver:self
+	 selector:@selector(metadataChanged:)
+	 name:ASUpdateMetadataNotification
+	 object:streamer];
 }
 
 //
@@ -136,6 +151,26 @@
 	[volumeView sizeToFit];
 	
 	[self setButtonImage:[UIImage imageNamed:@"playbutton.png"]];
+
+	levelMeterView = [[LevelMeterView alloc] initWithFrame:CGRectMake(10.0, 310.0, 300.0, 60.0)];
+	[self.view addSubview:levelMeterView];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	[[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+	[self becomeFirstResponder]; // this enables listening for events
+	// update the UI in case we were in the background
+	NSNotification *notification =
+	[NSNotification
+	 notificationWithName:ASStatusChangedNotification
+	 object:self];
+	[[NSNotificationCenter defaultCenter]
+	 postNotification:notification];
+}
+
+- (BOOL)canBecomeFirstResponder {
+	return YES;
 }
 
 //
@@ -239,16 +274,69 @@
 {
 	if ([streamer isWaiting])
 	{
+		[levelMeterView updateMeterWithLeftValue:0.0 
+                                    rightValue:0.0];
+		[streamer setMeteringEnabled:NO];
 		[self setButtonImage:[UIImage imageNamed:@"loadingbutton.png"]];
 	}
 	else if ([streamer isPlaying])
 	{
+		[streamer setMeteringEnabled:YES];
 		[self setButtonImage:[UIImage imageNamed:@"stopbutton.png"]];
 	}
 	else if ([streamer isIdle])
 	{
+		[levelMeterView updateMeterWithLeftValue:0.0 
+                                    rightValue:0.0];
 		[self destroyStreamer];
 		[self setButtonImage:[UIImage imageNamed:@"playbutton.png"]];
+	}
+}
+
+/** Example metadata
+ * 
+ StreamTitle='Kim Sozzi / Amuka / Livvi Franc - Secret Love / It's Over / Automatik',
+ StreamUrl='&artist=Kim%20Sozzi%20%2F%20Amuka%20%2F%20Livvi%20Franc&title=Secret%20Love%20%2F%20It%27s%20Over%20%2F%20Automatik&album=&duration=1133453&songtype=S&overlay=no&buycd=&website=&picture=',
+
+ Format is generally "Artist hypen Title" although servers may deliver only one. This code assumes 1 field is artist.
+ */
+- (void)metadataChanged:(NSNotification *)aNotification
+{
+	NSString *streamArtist;
+	NSString *streamTitle;
+	NSArray *metaParts = [[[aNotification userInfo] objectForKey:@"metadata"] componentsSeparatedByString:@";"];
+	NSString *item;
+	NSMutableDictionary *hash = [[NSMutableDictionary alloc] init];
+	for (item in metaParts) {
+		// split the key/value pair
+		NSArray *pair = [item componentsSeparatedByString:@"="];
+		// don't bother with bad metadata
+		if ([pair count] == 2)
+			[hash setObject:[pair objectAtIndex:1] forKey:[pair objectAtIndex:0]];
+	}
+
+	// do something with the StreamTitle
+	NSString *streamString = [[hash objectForKey:@"StreamTitle"] stringByReplacingOccurrencesOfString:@"'" withString:@""];
+	
+	NSArray *streamParts = [streamString componentsSeparatedByString:@" - "];
+	if ([streamParts count] > 0) {
+		streamArtist = [streamParts objectAtIndex:0];
+	} else {
+		streamArtist = @"";
+	}
+	// this looks odd but not every server will have all artist hyphen title
+	if ([streamParts count] >= 2) {
+		streamTitle = [streamParts objectAtIndex:1];
+	} else {
+		streamTitle = @"";
+	}
+	NSLog(@"%@ by %@", streamTitle, streamArtist);
+
+	// only update the UI if in foreground
+	iPhoneStreamingPlayerAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+	if (appDelegate.uiIsVisible) {
+		metadataArtist.text = streamArtist;
+		metadataTitle.text = streamTitle;
 	}
 }
 
@@ -286,6 +374,18 @@
 }
 
 //
+// updateLevelMeters:
+//
+
+- (void)updateLevelMeters:(NSTimer *)timer {
+	iPhoneStreamingPlayerAppDelegate *appDelegate = (iPhoneStreamingPlayerAppDelegate *)[[UIApplication sharedApplication] delegate];
+	if([streamer isMeteringEnabled] && appDelegate.uiIsVisible) {
+		[levelMeterView updateMeterWithLeftValue:[streamer averagePowerForChannel:0] 
+                                    rightValue:[streamer averagePowerForChannel:([streamer numberOfChannels] > 1 ? 1 : 0)]];
+	}
+}
+
+//
 // textFieldShouldReturn:
 //
 // Dismiss the text field when done is pressed
@@ -315,7 +415,38 @@
 		[progressUpdateTimer invalidate];
 		progressUpdateTimer = nil;
 	}
+	if(levelMeterUpdateTimer) {
+		[levelMeterUpdateTimer invalidate];
+		levelMeterUpdateTimer = nil;
+	}
+	[levelMeterView release];
 	[super dealloc];
+}
+
+#pragma mark Remote Control Events
+/* The iPod controls will send these events when the app is in the background */
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+	switch (event.subtype) {
+		case UIEventSubtypeRemoteControlTogglePlayPause:
+			if ([streamer isPlaying])
+				[streamer stop];
+			else {
+				[self createStreamer];
+				[streamer start];
+			}
+			break;
+		case UIEventSubtypeRemoteControlPlay:
+			[streamer start];
+			break;
+		case UIEventSubtypeRemoteControlPause:
+			[streamer pause];
+			break;
+		case UIEventSubtypeRemoteControlStop:
+			[streamer stop];
+			break;
+		default:
+			break;
+	}
 }
 
 @end

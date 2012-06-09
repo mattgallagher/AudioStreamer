@@ -24,6 +24,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class AudioStreamer;
+@class LevelMeterView;
 
 @interface MacStreamingPlayerController : NSObject
 {
@@ -33,6 +34,8 @@
 	IBOutlet NSSlider *progressSlider;
 	AudioStreamer *streamer;
 	NSTimer *progressUpdateTimer;
+	NSTimer *levelMeterUpdateTimer;
+	IBOutlet LevelMeterView *levelMeterView;
 }
 
 - (IBAction)buttonPressed:(id)sender;

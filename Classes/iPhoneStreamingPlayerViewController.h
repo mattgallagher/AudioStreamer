@@ -24,6 +24,7 @@
 #import <UIKit/UIKit.h>
 
 @class AudioStreamer;
+@class LevelMeterView;
 
 @interface iPhoneStreamingPlayerViewController : UIViewController
 {
@@ -32,8 +33,12 @@
 	IBOutlet UIView *volumeSlider;
 	IBOutlet UILabel *positionLabel;
 	IBOutlet UISlider *progressSlider;
+	IBOutlet UITextField *metadataArtist;
+	IBOutlet UITextField *metadataTitle;
 	AudioStreamer *streamer;
 	NSTimer *progressUpdateTimer;
+	NSTimer *levelMeterUpdateTimer;
+	LevelMeterView *levelMeterView;
 }
 
 - (IBAction)buttonPressed:(id)sender;

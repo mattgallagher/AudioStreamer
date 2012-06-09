@@ -106,6 +106,9 @@ typedef enum
 } AudioStreamerErrorCode;
 
 extern NSString * const ASStatusChangedNotification;
+extern NSString * const ASPresentAlertWithTitleNotification;
+// Shoutcast metadata notification. Must set retrieveShoutcastMetaData to YES to receive this notification.
+extern NSString * const ASUpdateMetadataNotification;
 
 @interface AudioStreamer : NSObject
 {
@@ -167,6 +170,23 @@ extern NSString * const ASStatusChangedNotification;
 #if TARGET_OS_IPHONE
 	BOOL pausedByInterruption;
 #endif
+
+   // Shoutcast metadata -- begin --
+   BOOL retrieveShoutcastMetaData;
+	BOOL foundIcyStart;
+	BOOL foundIcyEnd;
+	BOOL parsedHeaders;
+	unsigned int metaDataInterval;					// how many data bytes between meta data
+	unsigned int metaDataBytesRemaining;	// how many bytes of metadata remain to be read
+	unsigned int dataBytesRead;							// how many bytes of data have been read
+	NSMutableString *metaDataString;			// the metaDataString
+   // Shoutcast metadata -- end --
+   
+   // Level Meter support -- begin --
+   // Added by KT. Found in repo at: https://github.com/idevsoftware/AudioStreamer
+   UInt32 numberOfChannels;	// Number of audio channels in the stream (1 = mono, 2 = stereo)
+   // Level Meter support -- end --
+
 }
 
 @property AudioStreamerErrorCode errorCode;
@@ -175,6 +195,15 @@ extern NSString * const ASStatusChangedNotification;
 @property (readonly) double duration;
 @property (readwrite) UInt32 bitRate;
 @property (readonly) NSDictionary *httpHeaders;
+@property (assign) BOOL retrieveShoutcastMetaData;
+
+// Level Meter support -- begin --
+// Added by KT. Found in repo at: https://github.com/idevsoftware/AudioStreamer
+@property (readonly) UInt32 numberOfChannels;
+@property (assign, getter=isMeteringEnabled) BOOL meteringEnabled;
+- (float)peakPowerForChannel:(NSUInteger)channelNumber;
+- (float)averagePowerForChannel:(NSUInteger)channelNumber;
+// Level Meter support -- end --
 
 - (id)initWithURL:(NSURL *)aURL;
 - (void)start;
