@@ -204,6 +204,7 @@ static void ASReadStreamCallBack
 @synthesize state;
 @synthesize bitRate;
 @synthesize httpHeaders;
+@synthesize fileExtension;
 
 //
 // initWithURL
@@ -229,6 +230,7 @@ static void ASReadStreamCallBack
 {
 	[self stop];
 	[url release];
+	[fileExtension release];
 	[super dealloc];
 }
 
@@ -1290,8 +1292,12 @@ cleanup:
 			//
 			// If you have a fixed file-type, you may want to hardcode this.
 			//
+			if (!self.fileExtension)
+			{
+				self.fileExtension = [[url path] pathExtension];
+			}
 			AudioFileTypeID fileTypeHint =
-				[AudioStreamer hintForFileExtension:[[url path] pathExtension]];
+				[AudioStreamer hintForFileExtension:self.fileExtension];
 
 			// create an audio file stream parser
 			err = AudioFileStreamOpen(self, ASPropertyListenerProc, ASPacketsProc, 
