@@ -30,7 +30,7 @@
 @implementation iPhoneStreamingPlayerViewController
 
 //
-// setButtonImage:
+// setButtonImageNamed:
 //
 // Used to change the image on the playbutton. This method exists for
 // the purpose of inter-thread invocation because
@@ -38,23 +38,25 @@
 // from secondary threads and UI updates are only permitted on the main thread.
 //
 // Parameters:
-//    image - the image to set on the play button.
+//    imageNamed - the name of the image to set on the play button.
 //
-- (void)setButtonImage:(UIImage *)image
+- (void)setButtonImageNamed:(NSString *)imageName
 {
-	[button.layer removeAllAnimations];
-	if (!image)
+	if (!imageName)
 	{
-		[button setImage:[UIImage imageNamed:@"playbutton.png"] forState:0];
+		imageName = @"playButton";
 	}
-	else
-	{
-		[button setImage:image forState:0];
+	[currentImageName autorelease];
+	currentImageName = [imageName retain];
+	
+	UIImage *image = [UIImage imageNamed:imageName];
+	
+	[button.layer removeAllAnimations];
+	[button setImage:image forState:0];
 		
-		if ([button.currentImage isEqual:[UIImage imageNamed:@"loadingbutton.png"]])
-		{
-			[self spinButton];
-		}
+	if ([imageName isEqual:@"loadingbutton.png"])
+	{
+		[self spinButton];
 	}
 }
 
@@ -135,7 +137,7 @@
 	[volumeSlider addSubview:volumeView];
 	[volumeView sizeToFit];
 	
-	[self setButtonImage:[UIImage imageNamed:@"playbutton.png"]];
+	[self setButtonImageNamed:@"playbutton.png"];
 }
 
 //
@@ -198,12 +200,12 @@
 //
 - (IBAction)buttonPressed:(id)sender
 {
-	if ([button.currentImage isEqual:[UIImage imageNamed:@"playbutton.png"]])
+	if ([currentImageName isEqual:@"playbutton.png"])
 	{
 		[downloadSourceField resignFirstResponder];
 		
 		[self createStreamer];
-		[self setButtonImage:[UIImage imageNamed:@"loadingbutton.png"]];
+		[self setButtonImageNamed:@"loadingbutton.png"];
 		[streamer start];
 	}
 	else
@@ -239,16 +241,16 @@
 {
 	if ([streamer isWaiting])
 	{
-		[self setButtonImage:[UIImage imageNamed:@"loadingbutton.png"]];
+		[self setButtonImageNamed:@"loadingbutton.png"];
 	}
 	else if ([streamer isPlaying])
 	{
-		[self setButtonImage:[UIImage imageNamed:@"stopbutton.png"]];
+		[self setButtonImageNamed:@"stopbutton.png"];
 	}
 	else if ([streamer isIdle])
 	{
 		[self destroyStreamer];
-		[self setButtonImage:[UIImage imageNamed:@"playbutton.png"]];
+		[self setButtonImageNamed:@"playbutton.png"];
 	}
 }
 

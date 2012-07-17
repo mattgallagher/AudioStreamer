@@ -34,6 +34,7 @@
 	IBOutlet UISlider *progressSlider;
 	AudioStreamer *streamer;
 	NSTimer *progressUpdateTimer;
+	NSString *currentImageName;
 }
 
 - (IBAction)buttonPressed:(id)sender;
