@@ -1020,12 +1020,12 @@ cleanup:
 {
 	@synchronized(self)
 	{
-		if (sampleRate > 0 && ![self isFinishing])
-		{
-			if (state != AS_PLAYING && state != AS_PAUSED && state != AS_BUFFERING)
-			{
-				return lastProgress;
-			}
+        if (sampleRate > 0 && (state == AS_STOPPING || ![self isFinishing]))
+        {
+            if (state != AS_PLAYING && state != AS_PAUSED && state != AS_BUFFERING && state != AS_STOPPING)
+            {
+                return lastProgress;
+            }
 
 			AudioTimeStamp queueTime;
 			Boolean discontinuity;
