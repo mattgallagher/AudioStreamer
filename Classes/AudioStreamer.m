@@ -71,7 +71,7 @@ NSString * const AS_AUDIO_BUFFER_TOO_SMALL_STRING = @"Audio packets are larger t
 	propertyID:(AudioQueuePropertyID)inID;
 
 #if TARGET_OS_IPHONE
-- (void)handleInterruptionChangeToState:(AudioQueuePropertyID)inInterruptionState;
+- (void)handleInterruptionChangeToState:(NSNotification *)notification;
 #endif
 
 - (void)internalSeekToTime:(double)newSeekTime;
