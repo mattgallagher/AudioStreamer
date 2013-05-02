@@ -1876,6 +1876,11 @@ cleanup:
 	pthread_mutex_unlock(&queueBuffersMutex);
 }
 
+- (void)handlePropertyChange:(NSNumber *)num
+{
+	[self handlePropertyChangeForQueue:NULL propertyID:[num intValue]];
+}
+
 //
 // handlePropertyChangeForQueue:propertyID:
 //
@@ -1890,6 +1895,11 @@ cleanup:
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
+	if (![[NSThread currentThread] isEqual:internalThread])
+	{
+		[self performSelector:@selector(handlePropertyChange:) onThread:internalThread withObject:[NSNumber numberWithInt:inID] waitUntilDone:NO modes:[NSArray arrayWithObject:NSDefaultRunLoopMode]];
+		return;
+	}
 	@synchronized(self)
 	{
 		if (inID == kAudioQueueProperty_IsRunning)
