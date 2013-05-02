@@ -30,6 +30,7 @@
 #define BitRateEstimationMinPackets 50
 
 NSString * const ASStatusChangedNotification = @"ASStatusChangedNotification";
+NSString * const ASAudioSessionInterruptionOccuredNotification = @"ASAudioSessionInterruptionOccuredNotification";
 
 NSString * const AS_NO_ERROR_STRING = @"No error.";
 NSString * const AS_FILE_STREAM_GET_PROPERTY_FAILED_STRING = @"File stream get property failed.";
@@ -70,7 +71,7 @@ NSString * const AS_AUDIO_BUFFER_TOO_SMALL_STRING = @"Audio packets are larger t
 	propertyID:(AudioQueuePropertyID)inID;
 
 #if TARGET_OS_IPHONE
-- (void)handleInterruptionChangeToState:(AudioQueuePropertyID)inInterruptionState;
+- (void)handleInterruptionChangeToState:(NSNotification *)notification;
 #endif
 
 - (void)internalSeekToTime:(double)newSeekTime;
@@ -170,10 +171,8 @@ static void ASAudioQueueIsRunningCallback(void *inUserData, AudioQueueRef inAQ, 
 //
 // Invoked if the audio session is interrupted (like when the phone rings)
 //
-static void ASAudioSessionInterruptionListener(void *inClientData, UInt32 inInterruptionState)
-{
-	AudioStreamer* streamer = (AudioStreamer *)inClientData;
-	[streamer handleInterruptionChangeToState:inInterruptionState];
+static void ASAudioSessionInterruptionListener(__unused void * inClientData, UInt32 inInterruptionState) {
+    [[NSNotificationCenter defaultCenter] postNotificationName:ASAudioSessionInterruptionOccuredNotification object:@(inInterruptionState)];
 }
 #endif
 
@@ -217,6 +216,7 @@ static void ASReadStreamCallBack
 	if (self != nil)
 	{
 		url = [aURL retain];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruptionChangeToState:) name:ASAudioSessionInterruptionOccuredNotification object:nil];
 	}
 	return self;
 }
@@ -228,6 +228,7 @@ static void ASReadStreamCallBack
 //
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:ASAudioSessionInterruptionOccuredNotification object:nil];
 	[self stop];
 	[url release];
 	[fileExtension release];
@@ -1949,8 +1950,8 @@ cleanup:
 //    inAQ - the audio queue
 //    inID - the property ID
 //
-- (void)handleInterruptionChangeToState:(AudioQueuePropertyID)inInterruptionState 
-{
+- (void)handleInterruptionChangeToState:(NSNotification *)notification {
+    AudioQueuePropertyID inInterruptionState = (AudioQueuePropertyID) [notification.object unsignedIntValue];
 	if (inInterruptionState == kAudioSessionBeginInterruption)
 	{ 
 		if ([self isPlaying]) {
