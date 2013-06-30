@@ -46,8 +46,7 @@
 	{
 		imageName = @"playButton";
 	}
-	[currentImageName autorelease];
-	currentImageName = [imageName retain];
+	currentImageName = imageName;
 	
 	UIImage *image = [UIImage imageNamed:imageName];
 	
@@ -77,7 +76,6 @@
 		progressUpdateTimer = nil;
 		
 		[streamer stop];
-		[streamer release];
 		streamer = nil;
 	}
 }
@@ -97,13 +95,12 @@
 	[self destroyStreamer];
 	
 	NSString *escapedValue =
-		[(NSString *)CFURLCreateStringByAddingPercentEscapes(
+		(NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
 			nil,
 			(CFStringRef)downloadSourceField.text,
 			NULL,
 			NULL,
-			kCFStringEncodingUTF8)
-		autorelease];
+			kCFStringEncodingUTF8));
 
 	NSURL *url = [NSURL URLWithString:escapedValue];
 	streamer = [[AudioStreamer alloc] initWithURL:url];
@@ -133,7 +130,7 @@
 {
 	[super viewDidLoad];
 	
-	MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:volumeSlider.bounds] autorelease];
+	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:volumeSlider.bounds];
 	[volumeSlider addSubview:volumeView];
 	[volumeView sizeToFit];
 	
@@ -317,7 +314,6 @@
 		[progressUpdateTimer invalidate];
 		progressUpdateTimer = nil;
 	}
-	[super dealloc];
 }
 
 @end
