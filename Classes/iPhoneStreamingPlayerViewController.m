@@ -27,6 +27,8 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <CFNetwork/CFNetwork.h>
 
+
+
 @implementation iPhoneStreamingPlayerViewController
 
 //
@@ -135,7 +137,23 @@
 	[volumeView sizeToFit];
 	
 	[self setButtonImageNamed:@"playbutton.png"];
+        
 }
+
+- (void)viewDidAppear:(BOOL)animated {
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [self becomeFirstResponder];
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+    [[AVAudioSession sharedInstance] setActive: YES error: nil];
+    [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    [self resignFirstResponder];
+    [super viewWillDisappear:animated];
+}
+
 
 //
 // spinButton
@@ -299,6 +317,29 @@
 	[sender resignFirstResponder];
 	[self createStreamer];
 	return YES;
+}
+
+- (BOOL)canBecomeFirstResponder {
+	return YES;
+}
+
+- (void)remoteControlReceivedWithEvent:(UIEvent *)event {
+	switch (event.subtype) {
+		case UIEventSubtypeRemoteControlTogglePlayPause:
+			[streamer pause];
+			break;
+		case UIEventSubtypeRemoteControlPlay:
+			[streamer start];
+			break;
+		case UIEventSubtypeRemoteControlPause:
+			[streamer pause];
+			break;
+		case UIEventSubtypeRemoteControlStop:
+			[streamer stop];
+			break;
+		default:
+			break;
+	}
 }
 
 //
