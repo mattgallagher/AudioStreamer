@@ -25,8 +25,7 @@
 
 @class iPhoneStreamingPlayerViewController;
 
-
-@interface iPhoneStreamingPlayerAppDelegate : UIResponder <UIApplicationDelegate> {
+@interface iPhoneStreamingPlayerAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     iPhoneStreamingPlayerViewController *viewController;
 }
