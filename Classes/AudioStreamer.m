@@ -1907,7 +1907,13 @@ cleanup:
 		{
 			if (state == AS_STOPPING)
 			{
-				self.state = AS_STOPPED;
+                // Should check value of isRunning
+                UInt32 isRunning = 0;
+                UInt32 size = sizeof(UInt32);
+                AudioQueueGetProperty(audioQueue, inID, &isRunning, &size);
+                if (isRunning == 0) {
+                    self.state = AS_STOPPED;
+                }
 			}
 			else if (state == AS_WAITING_FOR_QUEUE_TO_START)
 			{
