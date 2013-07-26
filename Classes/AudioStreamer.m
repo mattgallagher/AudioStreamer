@@ -1898,7 +1898,12 @@ cleanup:
 	
 	if (![[NSThread currentThread] isEqual:internalThread])
 	{
-		[self performSelector:@selector(handlePropertyChange:) onThread:internalThread withObject:[NSNumber numberWithInt:inID] waitUntilDone:NO modes:[NSArray arrayWithObject:NSDefaultRunLoopMode]];
+		[self
+			performSelector:@selector(handlePropertyChange:)
+			onThread:internalThread
+			withObject:[NSNumber numberWithInt:inID]
+			waitUntilDone:NO
+			modes:[NSArray arrayWithObject:NSDefaultRunLoopMode]];
 		return;
 	}
 	@synchronized(self)
@@ -1907,13 +1912,15 @@ cleanup:
 		{
 			if (state == AS_STOPPING)
 			{
-                // Should check value of isRunning
-                UInt32 isRunning = 0;
-                UInt32 size = sizeof(UInt32);
-                AudioQueueGetProperty(audioQueue, inID, &isRunning, &size);
-                if (isRunning == 0) {
-                    self.state = AS_STOPPED;
-                }
+				// Should check value of isRunning to ensure this kAudioQueueProperty_IsRunning isn't
+				// the *start* of a very short stream
+				UInt32 isRunning = 0;
+				UInt32 size = sizeof(UInt32);
+				AudioQueueGetProperty(audioQueue, inID, &isRunning, &size);
+				if (isRunning == 0)
+				{
+					self.state = AS_STOPPED;
+				}
 			}
 			else if (state == AS_WAITING_FOR_QUEUE_TO_START)
 			{
