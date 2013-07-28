@@ -57,6 +57,7 @@ NSString * const AS_AUDIO_BUFFER_TOO_SMALL_STRING = @"Audio packets are larger t
 
 @interface AudioStreamer ()
 @property (readwrite) AudioStreamerState state;
+@property (readwrite) AudioStreamerState laststate;
 
 - (void)handlePropertyChangeForFileStream:(AudioFileStreamID)inAudioFileStream
 	fileStreamPropertyID:(AudioFileStreamPropertyID)inPropertyID
@@ -201,6 +202,7 @@ static void ASReadStreamCallBack
 
 @synthesize errorCode;
 @synthesize state;
+@synthesize laststate;
 @synthesize bitRate;
 @synthesize httpHeaders;
 @synthesize fileExtension;
@@ -1107,7 +1109,7 @@ cleanup:
 {
 	@synchronized(self)
 	{
-		if (state == AS_PLAYING)
+		if (state == AS_PLAYING || state == AS_STOPPING)
 		{
 			err = AudioQueuePause(audioQueue);
 			if (err)
@@ -1115,6 +1117,7 @@ cleanup:
 				[self failWithErrorCode:AS_AUDIO_QUEUE_PAUSE_FAILED];
 				return;
 			}
+            self.laststate = state;
 			self.state = AS_PAUSED;
 		}
 		else if (state == AS_PAUSED)
@@ -1125,7 +1128,7 @@ cleanup:
 				[self failWithErrorCode:AS_AUDIO_QUEUE_START_FAILED];
 				return;
 			}
-			self.state = AS_PLAYING;
+			self.state = self.laststate;
 		}
 	}
 }
