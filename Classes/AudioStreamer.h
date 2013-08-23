@@ -134,6 +134,7 @@ extern NSString * const ASStatusChangedNotification;
 	NSString *fileExtension;
 	
 	AudioStreamerState state;
+	AudioStreamerState laststate;
 	AudioStreamerStopReason stopReason;
 	AudioStreamerErrorCode errorCode;
 	OSStatus err;
