@@ -22,6 +22,9 @@
 //
 
 #import "AudioStreamer.h"
+
+#import "AppleAudioFileStreamParser.h"
+
 #if TARGET_OS_IPHONE			
 #import <CFNetwork/CFNetwork.h>
 #endif
@@ -839,15 +842,10 @@ cleanup:
 		//
 		// Close the audio file strea,
 		//
-		if (audioFileStream)
-		{
-			err = AudioFileStreamClose(audioFileStream);
-			audioFileStream = nil;
-			if (err)
-			{
-				[self failWithErrorCode:AS_FILE_STREAM_CLOSE_FAILED];
-			}
-		}
+        if (audioFileStreamParser != nil) {
+            [audioFileStreamParser close];
+            audioFileStreamParser = nil;
+        }
 		
 		//
 		// Dispose of the Audio Queue
@@ -958,8 +956,8 @@ cleanup:
 		UInt32 ioFlags = 0;
 		SInt64 packetAlignedByteOffset;
 		SInt64 seekPacket = floor(newSeekTime / packetDuration);
-		err = AudioFileStreamSeek(audioFileStream, seekPacket, &packetAlignedByteOffset, &ioFlags);
-		if (!err && !(ioFlags & kAudioFileStreamSeekFlag_OffsetIsEstimated))
+        BOOL succeed = [audioFileStreamParser seekOffset:seekPacket outOffset:&packetAlignedByteOffset flags:&ioFlags];
+		if (succeed && !(ioFlags & kAudioFileStreamSeekFlag_OffsetIsEstimated))
 		{
 			seekTime -= ((seekByteOffset - dataOffset) - packetAlignedByteOffset) * 8.0 / calculatedBitRate;
 			seekByteOffset = packetAlignedByteOffset + dataOffset;
@@ -1287,7 +1285,7 @@ cleanup:
 			}
 		}
 
-		if (!audioFileStream)
+		if (!audioFileStreamParser)
 		{
 			//
 			// Attempt to guess the file type from the URL. Reading the MIME type
@@ -1304,13 +1302,9 @@ cleanup:
 				[AudioStreamer hintForFileExtension:self.fileExtension];
 
 			// create an audio file stream parser
-			err = AudioFileStreamOpen(self, ASPropertyListenerProc, ASPacketsProc, 
-									fileTypeHint, &audioFileStream);
-			if (err)
-			{
-				[self failWithErrorCode:AS_FILE_STREAM_OPEN_FAILED];
-				return;
-			}
+            audioFileStreamParser = [[AppleAudioFileStreamParser alloc] initWithHint:fileTypeHint];
+            audioFileStreamParser.delegate = self;
+            [audioFileStreamParser open];
 		}
 		
 		UInt8 bytes[kAQDefaultBufSize];
@@ -1341,21 +1335,11 @@ cleanup:
 
 		if (discontinuous)
 		{
-			err = AudioFileStreamParseBytes(audioFileStream, length, bytes, kAudioFileStreamParseFlag_Discontinuity);
-			if (err)
-			{
-				[self failWithErrorCode:AS_FILE_STREAM_PARSE_BYTES_FAILED];
-				return;
-			}
+            [audioFileStreamParser parseData:bytes length:length flags:kAudioFileStreamParseFlag_Discontinuity];
 		}
 		else
 		{
-			err = AudioFileStreamParseBytes(audioFileStream, length, bytes, 0);
-			if (err)
-			{
-				[self failWithErrorCode:AS_FILE_STREAM_PARSE_BYTES_FAILED];
-				return;
-			}
+            [audioFileStreamParser parseData:bytes length:length flags:0];
 		}
 	}
 }
@@ -1487,12 +1471,13 @@ cleanup:
 	}
 	
 	// get the packet size if it is available
-	UInt32 sizeOfUInt32 = sizeof(UInt32);
-	err = AudioFileStreamGetProperty(audioFileStream, kAudioFileStreamProperty_PacketSizeUpperBound, &sizeOfUInt32, &packetBufferSize);
-	if (err || packetBufferSize == 0)
+    packetBufferSize = audioFileStreamParser.packetSizeUpperBound;
+//	err = AudioFileStreamGetProperty(audioFileStream, kAudioFileStreamProperty_PacketSizeUpperBound, &sizeOfUInt32, &packetBufferSize);
+	if (packetBufferSize == 0)
 	{
-		err = AudioFileStreamGetProperty(audioFileStream, kAudioFileStreamProperty_MaximumPacketSize, &sizeOfUInt32, &packetBufferSize);
-		if (err || packetBufferSize == 0)
+//		err = AudioFileStreamGetProperty(audioFileStream, kAudioFileStreamProperty_MaximumPacketSize, &sizeOfUInt32, &packetBufferSize);
+        packetBufferSize = audioFileStreamParser.maxPacketSize;
+		if (packetBufferSize == 0)
 		{
 			// No packet size available, just use the default
 			packetBufferSize = kAQDefaultBufSize;
@@ -1512,24 +1497,13 @@ cleanup:
 
 	// get the cookie size
 	UInt32 cookieSize;
-	Boolean writable;
-	OSStatus ignorableError;
-	ignorableError = AudioFileStreamGetPropertyInfo(audioFileStream, kAudioFileStreamProperty_MagicCookieData, &cookieSize, &writable);
-	if (ignorableError)
-	{
-		return;
-	}
-
-	// get the cookie data
-	void* cookieData = calloc(1, cookieSize);
-	ignorableError = AudioFileStreamGetProperty(audioFileStream, kAudioFileStreamProperty_MagicCookieData, &cookieSize, cookieData);
-	if (ignorableError)
-	{
-		return;
-	}
+    void *cookieData = [audioFileStreamParser getMagicCookieDataWithLen:&cookieSize];
+    if (cookieData == NULL) {
+        return;
+    }
 
 	// set the cookie on the queue.
-	ignorableError = AudioQueueSetProperty(audioQueue, kAudioQueueProperty_MagicCookie, cookieData, cookieSize);
+	OSStatus ignorableError = AudioQueueSetProperty(audioQueue, kAudioQueueProperty_MagicCookie, cookieData, cookieSize);
 	free(cookieData);
 	if (ignorableError)
 	{

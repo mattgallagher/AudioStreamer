@@ -29,6 +29,7 @@
 
 #include <pthread.h>
 #include <AudioToolbox/AudioToolbox.h>
+#include "BKAudioFileStreamParser.h"
 
 #define LOG_QUEUED_BUFFERS 0
 
@@ -107,7 +108,7 @@ typedef enum
 
 extern NSString * const ASStatusChangedNotification;
 
-@interface AudioStreamer : NSObject
+@interface AudioStreamer : NSObject<BKAudioFileStreamDelegate>
 {
 	NSURL *url;
 
@@ -117,7 +118,8 @@ extern NSString * const ASStatusChangedNotification;
 	//	synchronized(self) block and only *after* checking that ![self isFinishing]
 	//
 	AudioQueueRef audioQueue;
-	AudioFileStreamID audioFileStream;	// the audio file stream parser
+//	AudioFileStreamID audioFileStream;	// the audio file stream parser
+    id<BKAudioFileStreamParser> audioFileStreamParser;
 	AudioStreamBasicDescription asbd;	// description of the audio
 	NSThread *internalThread;			// the thread where the download and
 										// audio file stream parsing occurs
