@@ -62,9 +62,6 @@ NSString * const AS_AUDIO_BUFFER_TOO_SMALL_STRING = @"Audio packets are larger t
 @property (readwrite) AudioStreamerState state;
 @property (readwrite) AudioStreamerState laststate;
 
-- (void)handlePropertyChangeForFileStream:(AudioFileStreamID)inAudioFileStream
-	fileStreamPropertyID:(AudioFileStreamPropertyID)inPropertyID
-	ioFlags:(UInt32 *)ioFlags;
 - (void)handleAudioPackets:(const void *)inInputData
 	numberBytes:(UInt32)inNumberBytes
 	numberPackets:(UInt32)inNumberPackets
@@ -86,56 +83,6 @@ NSString * const AS_AUDIO_BUFFER_TOO_SMALL_STRING = @"Audio packets are larger t
 @end
 
 #pragma mark Audio Callback Function Implementations
-
-//
-// ASPropertyListenerProc
-//
-// Receives notification when the AudioFileStream has audio packets to be
-// played. In response, this function creates the AudioQueue, getting it
-// ready to begin playback (playback won't begin until audio packets are
-// sent to the queue in ASEnqueueBuffer).
-//
-// This function is adapted from Apple's example in AudioFileStreamExample with
-// kAudioQueueProperty_IsRunning listening added.
-//
-static void ASPropertyListenerProc(void *						inClientData,
-								AudioFileStreamID				inAudioFileStream,
-								AudioFileStreamPropertyID		inPropertyID,
-								UInt32 *						ioFlags)
-{	
-	// this is called by audio file stream when it finds property values
-	AudioStreamer* streamer = (AudioStreamer *)inClientData;
-	[streamer
-		handlePropertyChangeForFileStream:inAudioFileStream
-		fileStreamPropertyID:inPropertyID
-		ioFlags:ioFlags];
-}
-
-//
-// ASPacketsProc
-//
-// When the AudioStream has packets to be played, this function gets an
-// idle audio buffer and copies the audio packets into it. The calls to
-// ASEnqueueBuffer won't return until there are buffers available (or the
-// playback has been stopped).
-//
-// This function is adapted from Apple's example in AudioFileStreamExample with
-// CBR functionality added.
-//
-static void ASPacketsProc(		void *							inClientData,
-								UInt32							inNumberBytes,
-								UInt32							inNumberPackets,
-								const void *					inInputData,
-								AudioStreamPacketDescription	*inPacketDescriptions)
-{
-	// this is called by audio file stream when it finds packets of audio
-	AudioStreamer* streamer = (AudioStreamer *)inClientData;
-	[streamer
-		handleAudioPackets:inInputData
-		numberBytes:inNumberBytes
-		numberPackets:inNumberPackets
-		packetDescriptions:inPacketDescriptions];
-}
 
 //
 // ASAudioQueueOutputCallback
@@ -1521,9 +1468,8 @@ cleanup:
 //    inPropertyID - the property that changed
 //    ioFlags - the ioFlags passed in
 //
-- (void)handlePropertyChangeForFileStream:(AudioFileStreamID)inAudioFileStream
-	fileStreamPropertyID:(AudioFileStreamPropertyID)inPropertyID
-	ioFlags:(UInt32 *)ioFlags
+
+- (void) handlePropertyChangeForFileStream:(id<BKAudioFileStreamParser>)fileStreamParser fileStreamPropertyID:(AudioFileStreamPropertyID)inPropertyID
 {
 	@synchronized(self)
 	{
@@ -1539,9 +1485,8 @@ cleanup:
 		else if (inPropertyID == kAudioFileStreamProperty_DataOffset)
 		{
 			SInt64 offset;
-			UInt32 offsetSize = sizeof(offset);
-			err = AudioFileStreamGetProperty(inAudioFileStream, kAudioFileStreamProperty_DataOffset, &offsetSize, &offset);
-			if (err)
+            offset = fileStreamParser.dataOffset;
+			if (offset < 0)
 			{
 				[self failWithErrorCode:AS_FILE_STREAM_GET_PROPERTY_FAILED];
 				return;
@@ -1555,9 +1500,8 @@ cleanup:
 		}
 		else if (inPropertyID == kAudioFileStreamProperty_AudioDataByteCount)
 		{
-			UInt32 byteCountSize = sizeof(UInt64);
-			err = AudioFileStreamGetProperty(inAudioFileStream, kAudioFileStreamProperty_AudioDataByteCount, &byteCountSize, &audioDataByteCount);
-			if (err)
+            audioDataByteCount = fileStreamParser.audioDataByteCount;
+            if (audioDataByteCount == 0)
 			{
 				[self failWithErrorCode:AS_FILE_STREAM_GET_PROPERTY_FAILED];
 				return;
@@ -1568,36 +1512,15 @@ cleanup:
 		{
 			if (asbd.mSampleRate == 0)
 			{
-				UInt32 asbdSize = sizeof(asbd);
-				
-				// get the stream format.
-				err = AudioFileStreamGetProperty(inAudioFileStream, kAudioFileStreamProperty_DataFormat, &asbdSize, &asbd);
-				if (err)
-				{
-					[self failWithErrorCode:AS_FILE_STREAM_GET_PROPERTY_FAILED];
+                if (![fileStreamParser getDataFormat:&asbd]) {
 					return;
 				}
 			}
 		}
 		else if (inPropertyID == kAudioFileStreamProperty_FormatList)
 		{
-			Boolean outWriteable;
 			UInt32 formatListSize;
-			err = AudioFileStreamGetPropertyInfo(inAudioFileStream, kAudioFileStreamProperty_FormatList, &formatListSize, &outWriteable);
-			if (err)
-			{
-				[self failWithErrorCode:AS_FILE_STREAM_GET_PROPERTY_FAILED];
-				return;
-			}
-			
-			AudioFormatListItem *formatList = malloc(formatListSize);
-	        err = AudioFileStreamGetProperty(inAudioFileStream, kAudioFileStreamProperty_FormatList, &formatListSize, formatList);
-			if (err)
-			{
-				free(formatList);
-				[self failWithErrorCode:AS_FILE_STREAM_GET_PROPERTY_FAILED];
-				return;
-			}
+            AudioFormatListItem *formatList = [fileStreamParser getFormatListWithLen:&formatListSize];
 
 			for (int i = 0; i * sizeof(AudioFormatListItem) < formatListSize; i += sizeof(AudioFormatListItem))
 			{

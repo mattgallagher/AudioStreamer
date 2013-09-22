@@ -23,9 +23,7 @@ static void ASPropertyListenerProc(void *						inClientData,
 	// this is called by audio file stream when it finds property values
 	AppleAudioFileStreamParser* streamer = (AppleAudioFileStreamParser *)inClientData;
 	[streamer.delegate
-     handlePropertyChangeForFileStream:inAudioFileStream
-     fileStreamPropertyID:inPropertyID
-     ioFlags:ioFlags];
+     handlePropertyChangeForFileStream:streamer fileStreamPropertyID:inPropertyID];
 }
 
 static void ASPacketsProc(void *							inClientData,
@@ -128,7 +126,7 @@ static void ASPacketsProc(void *							inClientData,
     return audioDataByteCount;
 }
 
-- (void) getDataFormat:(AudioStreamBasicDescription *)dataFormat
+- (BOOL) getDataFormat:(AudioStreamBasicDescription *)dataFormat
 {
     UInt32 asbdSize = sizeof(*dataFormat);
     
@@ -137,25 +135,25 @@ static void ASPacketsProc(void *							inClientData,
     if (err)
     {
         [self.delegate failWithErrorCode:AS_FILE_STREAM_GET_PROPERTY_FAILED];
-        return;
+        return FALSE;
     }
+    return TRUE;
 }
 
-- (AudioFormatListItem *) formatList
+- (AudioFormatListItem *) getFormatListWithLen:(UInt32 *)formatListSize
 {
     Boolean outWriteable;
-    UInt32 formatListSize;
     OSStatus err;
     
-    err = AudioFileStreamGetPropertyInfo(audioFileStream, kAudioFileStreamProperty_FormatList, &formatListSize, &outWriteable);
+    err = AudioFileStreamGetPropertyInfo(audioFileStream, kAudioFileStreamProperty_FormatList, formatListSize, &outWriteable);
     if (err)
     {
         [self.delegate failWithErrorCode:AS_FILE_STREAM_GET_PROPERTY_FAILED];
         return NULL;
     }
     
-    AudioFormatListItem *formatList = malloc(formatListSize);
-    err = AudioFileStreamGetProperty(audioFileStream, kAudioFileStreamProperty_FormatList, &formatListSize, formatList);
+    AudioFormatListItem *formatList = malloc(*formatListSize);
+    err = AudioFileStreamGetProperty(audioFileStream, kAudioFileStreamProperty_FormatList, formatListSize, formatList);
     if (err)
     {
         free(formatList);
