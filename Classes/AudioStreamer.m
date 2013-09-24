@@ -24,6 +24,7 @@
 #import "AudioStreamer.h"
 
 #import "AppleAudioFileStreamParser.h"
+#import "OggVorbisStreamParser.h"
 
 #if TARGET_OS_IPHONE			
 #import <CFNetwork/CFNetwork.h>
@@ -1249,7 +1250,8 @@ cleanup:
 				[AudioStreamer hintForFileExtension:self.fileExtension];
 
 			// create an audio file stream parser
-            audioFileStreamParser = [[AppleAudioFileStreamParser alloc] initWithHint:fileTypeHint];
+//            audioFileStreamParser = [[AppleAudioFileStreamParser alloc] initWithHint:fileTypeHint];
+            audioFileStreamParser = [[OggVorbisStreamParser alloc] initWithHint:fileTypeHint];
             audioFileStreamParser.delegate = self;
             [audioFileStreamParser open];
 		}
@@ -1681,7 +1683,7 @@ cleanup:
 		{
 			// if the space remaining in the buffer is not enough for this packet, then enqueue the buffer.
 			size_t bufSpaceRemaining = kAQDefaultBufSize - bytesFilled;
-			if (bufSpaceRemaining < inNumberBytes)
+			if (bytesFilled > 0 && bufSpaceRemaining < inNumberBytes)
 			{
 				[self enqueueBuffer];
 			}
