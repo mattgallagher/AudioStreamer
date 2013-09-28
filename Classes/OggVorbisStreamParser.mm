@@ -14,6 +14,12 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 
+//#define PROFILE_CODE 1
+
+#ifdef PROFILE_CODE
+#include "cputime.h"
+#endif
+
 @interface OggVorbisStreamParser () {
     ogg_sync_state _oggSyncState;
     ogg_stream_state _oggStreamState;
@@ -24,6 +30,11 @@
     vorbis_block _vorbisBlock;
     
     int _state;
+
+#ifdef PROFILE_CODE
+    int _totalSamples;
+    double _totalCputimes;
+#endif
     
 }
 
@@ -49,6 +60,11 @@
     vorbis_comment_init(&_vorbisComment);
     
     _state = 0;
+    
+#ifdef PROFILE_CODE
+    _totalSamples = 0;
+    _totalCputimes = 0.0;
+#endif
 
     return TRUE;
 }
@@ -151,6 +167,12 @@
             [self.delegate handlePropertyChangeForFileStream:self fileStreamPropertyID:kAudioFileStreamProperty_ReadyToProducePackets];
         }
         else if (_state == 3) {
+#ifdef PROFILE_CODE
+            CPUTime starttime, endtime;
+            
+            get_cpu_time(&starttime, TRUE);
+#endif
+            
             ogg_int16_t convbuffer[4096];
             status = ogg_stream_pagein(&_oggStreamState, &page);
             
@@ -202,6 +224,10 @@
 
                         
                         vorbis_synthesis_read(&_vorbisDspState, bout);
+
+#ifdef PROFILE_CODE
+                        _totalSamples += samples;
+#endif
                     }
 
                 }
@@ -211,6 +237,11 @@
                 NSLog(@"received EOS!");
                 _state = 0;
             }
+
+#ifdef PROFILE_CODE
+            get_cpu_time(&endtime, TRUE);
+            _totalCputimes += endtime.utime - starttime.utime;
+#endif
 
         }
     }
@@ -230,6 +261,15 @@
 - (void) close
 {
     ogg_sync_clear(&_oggSyncState);
+    _state = 0;
+
+#ifdef PROFILE_CODE
+    NSLog(@"total samples %d total cputimes %g rate (samples per sec) %g", _totalSamples, _totalCputimes,
+          _totalSamples / _totalCputimes);
+    
+    _totalSamples = 0;
+    _totalCputimes = 0.0;
+#endif
 }
 
 - (SInt64) dataOffset

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		19A0141C17E6FD4000C7D69C /* AppleAudioFileStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A0141B17E6FD4000C7D69C /* AppleAudioFileStreamParser.m */; };
+		19A70D9A17F1C08600F5A2C6 /* cputime.c in Sources */ = {isa = PBXBuildFile; fileRef = 19A70D9917F1C08600F5A2C6 /* cputime.c */; };
 		19A8DEA417EECC2600ED8C86 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A8DEA117EECC2600ED8C86 /* Ogg.framework */; };
 		19A8DEA517EECC2600ED8C86 /* Oggz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A8DEA217EECC2600ED8C86 /* Oggz.framework */; };
 		19A8DEA617EECC2600ED8C86 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A8DEA317EECC2600ED8C86 /* Vorbis.framework */; };
@@ -36,6 +37,8 @@
 		199175D917E70C6600D69392 /* BKAudioFileStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BKAudioFileStreamParser.h; sourceTree = "<group>"; };
 		19A0141A17E6FD4000C7D69C /* AppleAudioFileStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleAudioFileStreamParser.h; sourceTree = "<group>"; };
 		19A0141B17E6FD4000C7D69C /* AppleAudioFileStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppleAudioFileStreamParser.m; sourceTree = "<group>"; };
+		19A70D9917F1C08600F5A2C6 /* cputime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cputime.c; sourceTree = "<group>"; };
+		19A70D9B17F1C0C400F5A2C6 /* cputime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cputime.h; sourceTree = "<group>"; };
 		19A8DEA117EECC2600ED8C86 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = Frameworks/Ogg.framework; sourceTree = "<group>"; };
 		19A8DEA217EECC2600ED8C86 /* Oggz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Oggz.framework; path = Frameworks/Oggz.framework; sourceTree = "<group>"; };
 		19A8DEA317EECC2600ED8C86 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = Frameworks/Vorbis.framework; sourceTree = "<group>"; };
@@ -102,6 +105,8 @@
 				199175D917E70C6600D69392 /* BKAudioFileStreamParser.h */,
 				19A8DEA717EED03A00ED8C86 /* OggVorbisStreamParser.h */,
 				19A8DEA817EED03A00ED8C86 /* OggVorbisStreamParser.mm */,
+				19A70D9917F1C08600F5A2C6 /* cputime.c */,
+				19A70D9B17F1C0C400F5A2C6 /* cputime.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -239,6 +244,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				19A8DEA917EED03A00ED8C86 /* OggVorbisStreamParser.mm in Sources */,
 				1D3623260D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m in Sources */,
+				19A70D9A17F1C08600F5A2C6 /* cputime.c in Sources */,
 				28D7ACF80DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m in Sources */,
 				19A0141C17E6FD4000C7D69C /* AppleAudioFileStreamParser.m in Sources */,
 				C9C2D87A0EB6E09C00A3D071 /* AudioStreamer.m in Sources */,
