@@ -25,6 +25,7 @@
 
 #import "AppleAudioFileStreamParser.h"
 #import "OggVorbisStreamParser.h"
+#import "OggOpusStreamParser.h"
 
 #if TARGET_OS_IPHONE			
 #import <CFNetwork/CFNetwork.h>
@@ -1251,7 +1252,8 @@ cleanup:
 
 			// create an audio file stream parser
 //            audioFileStreamParser = [[AppleAudioFileStreamParser alloc] initWithHint:fileTypeHint];
-            audioFileStreamParser = [[OggVorbisStreamParser alloc] initWithHint:fileTypeHint];
+//            audioFileStreamParser = [[OggVorbisStreamParser alloc] initWithHint:fileTypeHint];
+            audioFileStreamParser = [[OggOpusStreamParser alloc] initWithHint:fileTypeHint];
             audioFileStreamParser.delegate = self;
             [audioFileStreamParser open];
 		}

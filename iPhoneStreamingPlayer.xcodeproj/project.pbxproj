@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		191AFDE817F6A30000E7F483 /* OggOpusStreamParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = 191AFDE717F6A30000E7F483 /* OggOpusStreamParser.mm */; };
+		1940DE4117F86BA5002A6432 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1940DE4017F86BA5002A6432 /* Ogg.framework */; };
+		1940DE4417F86BB6002A6432 /* Opus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1940DE4217F86BB6002A6432 /* Opus.framework */; };
+		1940DE4517F86BB6002A6432 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1940DE4317F86BB6002A6432 /* Vorbis.framework */; };
 		19A0141C17E6FD4000C7D69C /* AppleAudioFileStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A0141B17E6FD4000C7D69C /* AppleAudioFileStreamParser.m */; };
 		19A70D9A17F1C08600F5A2C6 /* cputime.c in Sources */ = {isa = PBXBuildFile; fileRef = 19A70D9917F1C08600F5A2C6 /* cputime.c */; };
-		19A8DEA417EECC2600ED8C86 /* Ogg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A8DEA117EECC2600ED8C86 /* Ogg.framework */; };
-		19A8DEA517EECC2600ED8C86 /* Oggz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A8DEA217EECC2600ED8C86 /* Oggz.framework */; };
-		19A8DEA617EECC2600ED8C86 /* Vorbis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A8DEA317EECC2600ED8C86 /* Vorbis.framework */; };
 		19A8DEA917EED03A00ED8C86 /* OggVorbisStreamParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19A8DEA817EED03A00ED8C86 /* OggVorbisStreamParser.mm */; };
 		1D3623260D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
@@ -34,14 +35,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		191AFDE617F6A30000E7F483 /* OggOpusStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OggOpusStreamParser.h; sourceTree = "<group>"; };
+		191AFDE717F6A30000E7F483 /* OggOpusStreamParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OggOpusStreamParser.mm; sourceTree = "<group>"; };
+		1940DE4017F86BA5002A6432 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = Frameworks/Ogg.framework; sourceTree = "<group>"; };
+		1940DE4217F86BB6002A6432 /* Opus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opus.framework; path = Frameworks/Opus.framework; sourceTree = "<group>"; };
+		1940DE4317F86BB6002A6432 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = Frameworks/Vorbis.framework; sourceTree = "<group>"; };
 		199175D917E70C6600D69392 /* BKAudioFileStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BKAudioFileStreamParser.h; sourceTree = "<group>"; };
 		19A0141A17E6FD4000C7D69C /* AppleAudioFileStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppleAudioFileStreamParser.h; sourceTree = "<group>"; };
 		19A0141B17E6FD4000C7D69C /* AppleAudioFileStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppleAudioFileStreamParser.m; sourceTree = "<group>"; };
 		19A70D9917F1C08600F5A2C6 /* cputime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cputime.c; sourceTree = "<group>"; };
 		19A70D9B17F1C0C400F5A2C6 /* cputime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cputime.h; sourceTree = "<group>"; };
-		19A8DEA117EECC2600ED8C86 /* Ogg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Ogg.framework; path = Frameworks/Ogg.framework; sourceTree = "<group>"; };
-		19A8DEA217EECC2600ED8C86 /* Oggz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Oggz.framework; path = Frameworks/Oggz.framework; sourceTree = "<group>"; };
-		19A8DEA317EECC2600ED8C86 /* Vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vorbis.framework; path = Frameworks/Vorbis.framework; sourceTree = "<group>"; };
 		19A8DEA717EED03A00ED8C86 /* OggVorbisStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OggVorbisStreamParser.h; sourceTree = "<group>"; };
 		19A8DEA817EED03A00ED8C86 /* OggVorbisStreamParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OggVorbisStreamParser.mm; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -75,9 +78,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19A8DEA417EECC2600ED8C86 /* Ogg.framework in Frameworks */,
-				19A8DEA517EECC2600ED8C86 /* Oggz.framework in Frameworks */,
-				19A8DEA617EECC2600ED8C86 /* Vorbis.framework in Frameworks */,
+				1940DE4417F86BB6002A6432 /* Opus.framework in Frameworks */,
+				1940DE4517F86BB6002A6432 /* Vorbis.framework in Frameworks */,
+				1940DE4117F86BA5002A6432 /* Ogg.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
@@ -107,6 +110,8 @@
 				19A8DEA817EED03A00ED8C86 /* OggVorbisStreamParser.mm */,
 				19A70D9917F1C08600F5A2C6 /* cputime.c */,
 				19A70D9B17F1C0C400F5A2C6 /* cputime.h */,
+				191AFDE617F6A30000E7F483 /* OggOpusStreamParser.h */,
+				191AFDE717F6A30000E7F483 /* OggOpusStreamParser.mm */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -158,9 +163,9 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				19A8DEA117EECC2600ED8C86 /* Ogg.framework */,
-				19A8DEA217EECC2600ED8C86 /* Oggz.framework */,
-				19A8DEA317EECC2600ED8C86 /* Vorbis.framework */,
+				1940DE4217F86BB6002A6432 /* Opus.framework */,
+				1940DE4317F86BB6002A6432 /* Vorbis.framework */,
+				1940DE4017F86BA5002A6432 /* Ogg.framework */,
 				C9AB93F20FCF81790047C0FA /* MediaPlayer.framework */,
 				C9AB93E10FCF816F0047C0FA /* AudioToolbox.framework */,
 				C9423DF00EF8AA6B003B785B /* CFNetwork.framework */,
@@ -246,6 +251,7 @@
 				1D3623260D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m in Sources */,
 				19A70D9A17F1C08600F5A2C6 /* cputime.c in Sources */,
 				28D7ACF80DDB3853001CB0EB /* iPhoneStreamingPlayerViewController.m in Sources */,
+				191AFDE817F6A30000E7F483 /* OggOpusStreamParser.mm in Sources */,
 				19A0141C17E6FD4000C7D69C /* AppleAudioFileStreamParser.m in Sources */,
 				C9C2D87A0EB6E09C00A3D071 /* AudioStreamer.m in Sources */,
 			);
@@ -259,11 +265,9 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/bennykhoo/Sources/Barcast/build/liboggz,
-					/Users/bennykhoo/Sources/Barcast/build/libogg,
-					"/Users/bennykhoo/Sources/Barcast/IDZAQAudioPlayer-master/Frameworks",
 					/Users/bennykhoo/Sources/Barcast/src/AudioStreamer/Frameworks,
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -272,6 +276,7 @@
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
 				INFOPLIST_FILE = iPhoneInfo.plist;
 				PRODUCT_NAME = iPhoneStreamingPlayer;
+				"VALID_ARCHS[sdk=*]" = "arm64 armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -280,11 +285,9 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					/Users/bennykhoo/Sources/Barcast/build/liboggz,
-					/Users/bennykhoo/Sources/Barcast/build/libogg,
-					"/Users/bennykhoo/Sources/Barcast/IDZAQAudioPlayer-master/Frameworks",
 					/Users/bennykhoo/Sources/Barcast/src/AudioStreamer/Frameworks,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
