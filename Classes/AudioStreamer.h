@@ -108,6 +108,33 @@ typedef enum
 
 extern NSString * const ASStatusChangedNotification;
 
+enum {
+    // make sure ASAudioFileTypeID is in-sync with Apple's AudioFileTypeID enum
+    kASAudioFileAIFFType = kAudioFileAIFFType,
+    kASAudioFileAIFCType,
+    kASAudioFileWAVEType,
+    kASAudioFileSoundDesigner2Type,
+    kASAudioFileNextType,
+    kASAudioFileMP3Type,
+    kASAudioFileMP2Type,
+    kASAudioFileMP1Type,
+    kASAudioFileAC3Type,
+    kASAudioFileAAC_ADTSType,
+    kASAudioFileMPEG4Type,
+    kASAudioFileM4AType,
+    kASAudioFileM4BType,
+    kASAudioFileCAFType,
+    kASAudioFile3GPType,
+    kASAudioFile3GP2Type,
+    kASAudioFileAMRType,
+    
+    // any enum larger than >= ASAudioFileOggVorbisType is considered AS extension
+    kASAudioFileOggVorbisType,
+    kASAudioFileOggOpusType
+};
+typedef UInt32			ASAudioFileTypeID;
+
+
 @interface AudioStreamer : NSObject<BKAudioFileStreamDelegate>
 {
 	NSURL *url;

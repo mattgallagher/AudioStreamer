@@ -524,41 +524,49 @@ static void ASReadStreamCallBack
 //
 // returns a file type hint that can be passed to the AudioFileStream
 //
-+ (AudioFileTypeID)hintForFileExtension:(NSString *)fileExtension
++ (ASAudioFileTypeID)hintForFileExtension:(NSString *)fileExtension
 {
-	AudioFileTypeID fileTypeHint = kAudioFileAAC_ADTSType;
+	ASAudioFileTypeID fileTypeHint = kAudioFileAAC_ADTSType;
 	if ([fileExtension isEqual:@"mp3"])
 	{
-		fileTypeHint = kAudioFileMP3Type;
+		fileTypeHint = kASAudioFileMP3Type;
 	}
 	else if ([fileExtension isEqual:@"wav"])
 	{
-		fileTypeHint = kAudioFileWAVEType;
+		fileTypeHint = kASAudioFileWAVEType;
 	}
 	else if ([fileExtension isEqual:@"aifc"])
 	{
-		fileTypeHint = kAudioFileAIFCType;
+		fileTypeHint = kASAudioFileAIFCType;
 	}
 	else if ([fileExtension isEqual:@"aiff"])
 	{
-		fileTypeHint = kAudioFileAIFFType;
+		fileTypeHint = kASAudioFileAIFFType;
 	}
 	else if ([fileExtension isEqual:@"m4a"])
 	{
-		fileTypeHint = kAudioFileM4AType;
+		fileTypeHint = kASAudioFileM4AType;
 	}
 	else if ([fileExtension isEqual:@"mp4"])
 	{
-		fileTypeHint = kAudioFileMPEG4Type;
+		fileTypeHint = kASAudioFileMPEG4Type;
 	}
 	else if ([fileExtension isEqual:@"caf"])
 	{
-		fileTypeHint = kAudioFileCAFType;
+		fileTypeHint = kASAudioFileCAFType;
 	}
 	else if ([fileExtension isEqual:@"aac"])
 	{
-		fileTypeHint = kAudioFileAAC_ADTSType;
+		fileTypeHint = kASAudioFileAAC_ADTSType;
 	}
+    else if ([fileExtension isEqual:@"ogg"])
+    {
+        fileTypeHint = kASAudioFileOggVorbisType;
+    }
+    else if ([fileExtension isEqual:@"opus"])
+    {
+        fileTypeHint = kASAudioFileOggOpusType;
+    }
 	return fileTypeHint;
 }
 
@@ -1247,13 +1255,23 @@ cleanup:
 			{
 				self.fileExtension = [[url path] pathExtension];
 			}
-			AudioFileTypeID fileTypeHint =
-				[AudioStreamer hintForFileExtension:self.fileExtension];
+			ASAudioFileTypeID fileTypeHint = [AudioStreamer hintForFileExtension:self.fileExtension];
+            
+            switch (fileTypeHint) {
+                case kASAudioFileOggVorbisType:
+                    audioFileStreamParser = [[OggVorbisStreamParser alloc] initWithHint:fileTypeHint];
+                    break;
+                    
+                case kASAudioFileOggOpusType:
+                    audioFileStreamParser = [[OggOpusStreamParser alloc] initWithHint:fileTypeHint];
+                    break;
+                    
+                default:
+                    audioFileStreamParser = [[AppleAudioFileStreamParser alloc] initWithHint:fileTypeHint];
+                    break;
+            }
 
 			// create an audio file stream parser
-//            audioFileStreamParser = [[AppleAudioFileStreamParser alloc] initWithHint:fileTypeHint];
-//            audioFileStreamParser = [[OggVorbisStreamParser alloc] initWithHint:fileTypeHint];
-            audioFileStreamParser = [[OggOpusStreamParser alloc] initWithHint:fileTypeHint];
             audioFileStreamParser.delegate = self;
             [audioFileStreamParser open];
 		}
