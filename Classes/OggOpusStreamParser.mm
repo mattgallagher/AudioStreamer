@@ -103,7 +103,7 @@
             }
             
             int err;
-            _opusDecoder = opus_multistream_decoder_create(_header.input_sample_rate, _header.channel_count, _header.stream_count,
+            _opusDecoder = opus_multistream_decoder_create(48000, _header.channel_count, _header.stream_count,
                                                            _header.coupled_count, _header.mapping, &err);
             
             // FIXME set opus gain ... see opusfile.c:op_make_decode_ready
@@ -262,7 +262,7 @@
 - (BOOL) getDataFormat:(AudioStreamBasicDescription *)dataFormat
 {
     FillOutASBDForLPCM(*dataFormat,
-                       _header.input_sample_rate, // sample rate (fps)
+                       48000, // sample rate (fps)
                        _header.channel_count, // channels per frame
                        16, // valid bits per channel
                        16, // total bits per channel
