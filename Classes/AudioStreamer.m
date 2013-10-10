@@ -379,7 +379,8 @@ static void ASReadStreamCallBack
 		}
 
 		[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-							message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+							message:[NSString
+                                     stringWithFormat:NSLocalizedStringFromTable(@"Unable to configure network read stream: %d (%@)", @"Errors", nil), anErrorCode, [AudioStreamer stringForErrorCode:anErrorCode]]];
 	}
 }
 
@@ -559,7 +560,7 @@ static void ASReadStreamCallBack
 	{
 		fileTypeHint = kASAudioFileAAC_ADTSType;
 	}
-    else if ([fileExtension isEqual:@"ogg"])
+    else if ([fileExtension isEqual:@"ogg"] || [fileExtension isEqual:@"vorbis"])
     {
         fileTypeHint = kASAudioFileOggVorbisType;
     }
@@ -615,7 +616,7 @@ static void ASReadStreamCallBack
 			kCFBooleanTrue) == false)
 		{
 			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+								message:NSLocalizedStringFromTable(@"Failed to set Autoredirect property.", @"Errors", nil)];
 			return NO;
 		}
 		
@@ -656,7 +657,7 @@ static void ASReadStreamCallBack
 		{
 			CFRelease(stream);
 			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+								message:NSLocalizedStringFromTable(@"Failed to open stream.", @"Errors", nil)];
 			return NO;
 		}
 		
