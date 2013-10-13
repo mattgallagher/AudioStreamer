@@ -14,6 +14,7 @@
 		19A0141C17E6FD4000C7D69C /* AppleAudioFileStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 19A0141B17E6FD4000C7D69C /* AppleAudioFileStreamParser.m */; };
 		19A70D9A17F1C08600F5A2C6 /* cputime.c in Sources */ = {isa = PBXBuildFile; fileRef = 19A70D9917F1C08600F5A2C6 /* cputime.c */; };
 		19A8DEA917EED03A00ED8C86 /* OggVorbisStreamParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19A8DEA817EED03A00ED8C86 /* OggVorbisStreamParser.mm */; };
+		19B273BF180A3EFF0072C2A5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19B273BE180A3EFF0072C2A5 /* AVFoundation.framework */; };
 		1D3623260D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -47,6 +48,7 @@
 		19A70D9B17F1C0C400F5A2C6 /* cputime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cputime.h; sourceTree = "<group>"; };
 		19A8DEA717EED03A00ED8C86 /* OggVorbisStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OggVorbisStreamParser.h; sourceTree = "<group>"; };
 		19A8DEA817EED03A00ED8C86 /* OggVorbisStreamParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OggVorbisStreamParser.mm; sourceTree = "<group>"; };
+		19B273BE180A3EFF0072C2A5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneStreamingPlayerAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* iPhoneStreamingPlayerAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iPhoneStreamingPlayerAppDelegate.m; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19B273BF180A3EFF0072C2A5 /* AVFoundation.framework in Frameworks */,
 				1940DE4417F86BB6002A6432 /* Opus.framework in Frameworks */,
 				1940DE4517F86BB6002A6432 /* Vorbis.framework in Frameworks */,
 				1940DE4117F86BA5002A6432 /* Ogg.framework in Frameworks */,
@@ -163,6 +166,7 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				19B273BE180A3EFF0072C2A5 /* AVFoundation.framework */,
 				1940DE4217F86BB6002A6432 /* Opus.framework */,
 				1940DE4317F86BB6002A6432 /* Vorbis.framework */,
 				1940DE4017F86BA5002A6432 /* Ogg.framework */,

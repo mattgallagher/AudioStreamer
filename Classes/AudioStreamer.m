@@ -23,6 +23,8 @@
 
 #import "AudioStreamer.h"
 
+#import <AVFoundation/AVFoundation.h>
+
 #import "AppleAudioFileStreamParser.h"
 #import "OggVorbisStreamParser.h"
 #import "OggOpusStreamParser.h"
@@ -724,19 +726,26 @@ static void ASReadStreamCallBack
 		// Set the audio session category so that we continue to play if the
 		// iPhone/iPod auto-locks.
 		//
-		AudioSessionInitialize (
-			NULL,                          // 'NULL' to use the default (main) run loop
-			NULL,                          // 'NULL' to use the default run loop mode
-			ASAudioSessionInterruptionListener,  // a reference to your interruption callback
-			self                       // data to pass to your interruption listener callback
-		);
-		UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
-		AudioSessionSetProperty (
-			kAudioSessionProperty_AudioCategory,
-			sizeof (sessionCategory),
-			&sessionCategory
-		);
-		AudioSessionSetActive(true);
+        
+        NSError *error;
+        AVAudioSession *myAudioSession = [AVAudioSession sharedInstance];
+        BOOL success = [myAudioSession setCategory: AVAudioSessionCategoryPlayback error:&error];
+        if (!success) {
+            NSLog(@"Failed to set category in audio sesssion: (%d) %@", [error code], [error localizedDescription]);
+        }
+        else {
+            BOOL success = [myAudioSession setActive: YES error: &error];
+            if (success) {
+                
+                // set interrupt callbacks when receiving system interruption e.g. phone calls
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedSystemNotification:) name:AVAudioSessionInterruptionNotification object:nil];
+                
+                NSLog(@"Audio session activated");
+            } else {
+                NSLog(@"Failed to activate audio sesssion: (%d) %@", [error code], [error localizedDescription]);
+            }
+
+        }
 	#endif
 	
 		// initialize a mutex and condition so that we can block on buffers in use.
@@ -821,8 +830,14 @@ cleanup:
 		pthread_mutex_destroy(&queueBuffersMutex);
 		pthread_cond_destroy(&queueBufferReadyCondition);
 
-#if TARGET_OS_IPHONE			
-		AudioSessionSetActive(false);
+#if TARGET_OS_IPHONE
+        
+        // deactive AudioSession category and remove system interrupt callbacks
+        NSError *error;
+        AVAudioSession *myAudioSession = [AVAudioSession sharedInstance];
+        [myAudioSession setActive: NO error: &error];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
+
 #endif
 
 		[httpHeaders release];
@@ -1453,6 +1468,7 @@ cleanup:
 			packetBufferSize = kAQDefaultBufSize;
 		}
 	}
+    NSLog(@"packetBufferSize %ld", packetBufferSize);
 
 	// allocate audio queue buffers
 	for (unsigned int i = 0; i < kNumAQBufs; ++i)
@@ -1898,7 +1914,8 @@ cleanup:
 	}
 	else if (inInterruptionState == kAudioSessionEndInterruption) 
 	{
-		AudioSessionSetActive( true );
+        NSError *error;
+        [[AVAudioSession sharedInstance] setActive:YES error:&error];
 		
 		if ([self isPaused] && pausedByInterruption) {
 			[self pause]; // this is actually resume
@@ -1907,6 +1924,26 @@ cleanup:
 		}
 	}
 }
+
+- (void) receivedSystemNotification:(NSNotification*)notification
+{
+    NSDictionary *interuptionDict = notification.userInfo;
+    
+    NSUInteger interuptionType = [[interuptionDict valueForKey:AVAudioSessionInterruptionTypeKey] intValue];
+    
+    NSLog(@"received audio interrupt: %d", interuptionType);
+    
+    // route system interruption to ASAudioSessionInterruptionListener
+    if (interuptionType == AVAudioSessionInterruptionTypeBegan)
+        ASAudioSessionInterruptionListener(NULL, kAudioSessionBeginInterruption);
+        
+    else if (interuptionType == AVAudioSessionInterruptionTypeEnded)
+        ASAudioSessionInterruptionListener(NULL, kAudioSessionEndInterruption);
+    
+    else
+        NSLog(@"unknown interruption type: %d", interuptionType);
+}
+
 #endif
 
 @end
