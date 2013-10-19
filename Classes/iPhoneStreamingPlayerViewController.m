@@ -107,7 +107,7 @@
 
 	NSURL *url = [NSURL URLWithString:escapedValue];
 	streamer = [[AudioStreamer alloc] initWithURL:url];
-	
+    
 	progressUpdateTimer =
 		[NSTimer
 			scheduledTimerWithTimeInterval:0.1
@@ -120,6 +120,11 @@
 		selector:@selector(playbackStateChanged:)
 		name:ASStatusChangedNotification
 		object:streamer];
+    
+    // saving url to defaults database
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:escapedValue forKey:@"savedUrl"];
+    [defaults synchronize];
 }
 
 //
@@ -136,6 +141,12 @@
 	MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:volumeSlider.bounds] autorelease];
 	[volumeSlider addSubview:volumeView];
 	[volumeView sizeToFit];
+    
+    // restore url from defaults database
+    NSString *savedUrl = [[NSUserDefaults standardUserDefaults] objectForKey:@"savedUrl"];
+    if (savedUrl != nil) {
+        downloadSourceField.text = savedUrl;
+    }
 	
 	[self setButtonImageNamed:@"playbutton.png"];
 }
