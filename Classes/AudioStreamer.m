@@ -313,7 +313,7 @@ static void ASReadStreamCallBack
 		[[UIAlertView alloc]
 			initWithTitle:title
 			message:message
-			delegate:self
+			delegate:nil
 			cancelButtonTitle:NSLocalizedString(@"OK", @"")
 			otherButtonTitles: nil]
 		autorelease];
