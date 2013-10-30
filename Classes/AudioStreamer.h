@@ -179,6 +179,7 @@ extern NSString * const ASStatusChangedNotification;
 @property (readwrite) UInt32 bitRate;
 @property (readonly) NSDictionary *httpHeaders;
 @property (copy,readwrite) NSString *fileExtension;
+@property (nonatomic) BOOL shouldDisplayAlertOnError; //-- SDS: to control whether the alert is displayed in failWithErrorCode
 
 - (id)initWithURL:(NSURL *)aURL;
 - (void)start;
