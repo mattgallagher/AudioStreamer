@@ -562,6 +562,22 @@ static void ASReadStreamCallBack
 	return NO;
 }
 
+//-- SDS: isAborted method implementation
+//
+// isAborted
+//
+// returns YES if the AudioStream was stopped due to some errror, handled through failWithCodeError.
+//
+- (BOOL)isAborted
+{
+	if (state == AS_STOPPING && stopReason == AS_STOPPING_ERROR)
+	{
+		return YES;
+	}
+	
+	return NO;
+}
+
 //
 // hintForFileExtension:
 //
