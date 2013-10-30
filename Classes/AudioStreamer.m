@@ -359,7 +359,7 @@ static void ASReadStreamCallBack
 		[[UIAlertView alloc]
 			initWithTitle:title
 			message:message
-			delegate:self
+			delegate:nil  //-- SDS: this was `self`; apart from being unused, it caused a crash when the alert was dismissed after the streamer's dealloc
 			cancelButtonTitle:NSLocalizedString(@"OK", @"")
 			otherButtonTitles: nil]
 		autorelease];
