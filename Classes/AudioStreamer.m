@@ -359,7 +359,7 @@ static void ASReadStreamCallBack
 		[[UIAlertView alloc]
 			initWithTitle:title
 			message:message
-			delegate:self
+			delegate:nil //-- SDS: this was originally self, but is not used and was causing a crash if the streamer got deallocated before the alert was dismissed
 			cancelButtonTitle:NSLocalizedString(@"OK", @"")
 			otherButtonTitles: nil]
 		autorelease];
@@ -426,8 +426,9 @@ static void ASReadStreamCallBack
 			AudioQueueStop(audioQueue, true);
 		}
 
-		[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-							message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+        if (self.shouldDisplayAlertOnError)
+            [self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+                                message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
 	}
 }
 
@@ -562,6 +563,22 @@ static void ASReadStreamCallBack
 	return NO;
 }
 
+//-- SDS: isAborted method implementation
+//
+// isAborted
+//
+// returns YES if the AudioStream was stopped due to some errror, handled through failWithCodeError.
+//
+- (BOOL)isAborted
+{
+	if (state == AS_STOPPING && stopReason == AS_STOPPING_ERROR)
+	{
+		return YES;
+	}
+	
+	return NO;
+}
+
 //
 // hintForFileExtension:
 //
@@ -654,8 +671,11 @@ static void ASReadStreamCallBack
 			kCFStreamPropertyHTTPShouldAutoredirect,
 			kCFBooleanTrue) == false)
 		{
-			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+            //-- SDS: replace with failWithError
+//			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+//								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+            [self failWithErrorCode:AS_FILE_STREAM_SET_PROPERTY_FAILED];
+
 			return NO;
 		}
 		
@@ -695,8 +715,12 @@ static void ASReadStreamCallBack
 		if (!CFReadStreamOpen(stream))
 		{
 			CFRelease(stream);
-			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
-								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+            
+            //-- SDS: replace with failWithError
+//			[self presentAlertWithTitle:NSLocalizedStringFromTable(@"File Error", @"Errors", nil)
+//								message:NSLocalizedStringFromTable(@"Unable to configure network read stream.", @"Errors", nil)];
+            [self failWithErrorCode:AS_FILE_STREAM_OPEN_FAILED];
+
 			return NO;
 		}
 		
