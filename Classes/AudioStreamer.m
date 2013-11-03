@@ -669,7 +669,7 @@ static void ASReadStreamCallBack
 		//
 		// Handle SSL connections
 		//
-		if( [[url absoluteString] rangeOfString:@"https"].location != NSNotFound )
+		if([[url scheme] isEqualToString:@"https"])
 		{
 			NSDictionary *sslSettings =
 				[NSDictionary dictionaryWithObjectsAndKeys:
