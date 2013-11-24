@@ -1004,6 +1004,9 @@ cleanup:
 			AudioTimeStamp queueTime;
 			Boolean discontinuity;
 			err = AudioQueueGetCurrentTime(audioQueue, NULL, &queueTime, &discontinuity);
+            
+            // use this simulate interruption
+//            if (lastProgress > 10 && lastProgress < 13) {}
 
 			const OSStatus AudioQueueStopped = 0x73746F70; // 0x73746F70 is 'stop'
 			if (err == AudioQueueStopped)
@@ -1012,7 +1015,14 @@ cleanup:
 			}
 			else if (err)
 			{
-				[self failWithErrorCode:AS_GET_AUDIO_TIME_FAILED];
+//				[self failWithErrorCode:AS_GET_AUDIO_TIME_FAILED];
+                
+                NSException* myException = [NSException
+                                            exceptionWithName:@"GetAudioTimeFailed"
+                                            reason:@"get current audio queue time failed"
+                                            userInfo:nil];
+                @throw myException;
+                
 			}
 
 			double progress = seekTime + queueTime.mSampleTime / sampleRate;

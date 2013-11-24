@@ -273,29 +273,40 @@
 //
 - (void)updateProgress:(NSTimer *)updatedTimer
 {
-	if (streamer.bitRate != 0.0)
-	{
-		double progress = streamer.progress;
-		double duration = streamer.duration;
-		
-		if (duration > 0)
-		{
-			[positionLabel setText:
-				[NSString stringWithFormat:@"Time Played: %.1f/%.1f seconds",
-					progress,
-					duration]];
-			[progressSlider setEnabled:YES];
-			[progressSlider setValue:100 * progress / duration];
-		}
-		else
-		{
-			[progressSlider setEnabled:NO];
-		}
-	}
-	else
-	{
-		positionLabel.text = @"Time Played:";
-	}
+    @try {
+        if (streamer.bitRate != 0.0)
+        {
+            double progress = streamer.progress;
+            double duration = streamer.duration;
+            
+            if (duration > 0)
+            {
+                [positionLabel setText:
+                 [NSString stringWithFormat:@"Time Played: %.1f/%.1f seconds",
+                  progress,
+                  duration]];
+                [progressSlider setEnabled:YES];
+                [progressSlider setValue:100 * progress / duration];
+            }
+            else
+            {
+                [progressSlider setEnabled:NO];
+            }
+        }
+        else
+        {
+            positionLabel.text = @"Time Played:";
+        }
+
+    }
+    @catch (NSException *exception) {
+        [streamer stop];
+        [streamer start];
+    }
+    @finally {
+        ;
+    }
+    
 }
 
 //
