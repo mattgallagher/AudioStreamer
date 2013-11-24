@@ -268,7 +268,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: BENNY KHOO (BER2GHL8ER)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: BENNY KHOO (39HKGMK865)";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -281,7 +281,7 @@
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
 				INFOPLIST_FILE = iPhoneInfo.plist;
 				PRODUCT_NAME = iPhoneStreamingPlayer;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "B3C8F2A1-322E-4186-A395-9C158693CAE3";
 				"VALID_ARCHS[sdk=*]" = "arm64 armv7 armv7s";
 			};
 			name = Debug;
@@ -290,7 +290,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: BENNY KHOO (BER2GHL8ER)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: BENNY KHOO (39HKGMK865)";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -301,19 +301,19 @@
 				GCC_PREFIX_HEADER = iPhoneStreamingPlayer_Prefix.pch;
 				INFOPLIST_FILE = iPhoneInfo.plist;
 				PRODUCT_NAME = iPhoneStreamingPlayer;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "B3C8F2A1-322E-4186-A395-9C158693CAE3";
 			};
 			name = Release;
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: BENNY KHOO (BER2GHL8ER)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: BENNY KHOO (39HKGMK865)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "B3C8F2A1-322E-4186-A395-9C158693CAE3";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -321,12 +321,12 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: BENNY KHOO (BER2GHL8ER)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: BENNY KHOO (39HKGMK865)";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "B3C8F2A1-322E-4186-A395-9C158693CAE3";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
