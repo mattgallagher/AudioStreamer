@@ -688,14 +688,12 @@ static void ASReadStreamCallBack
 		if([[url scheme] isEqualToString:@"https"])
 		{
 			NSDictionary *sslSettings =
-				[NSDictionary dictionaryWithObjectsAndKeys:
-					(NSString *)kCFStreamSocketSecurityLevelNegotiatedSSL, kCFStreamSSLLevel,
-					[NSNumber numberWithBool:YES], kCFStreamSSLAllowsExpiredCertificates,
-					[NSNumber numberWithBool:YES], kCFStreamSSLAllowsExpiredRoots,
-					[NSNumber numberWithBool:YES], kCFStreamSSLAllowsAnyRoot,
-					[NSNumber numberWithBool:NO], kCFStreamSSLValidatesCertificateChain,
-					[NSNull null], kCFStreamSSLPeerName,
-				nil];
+				@{(id)kCFStreamSSLLevel: (NSString *)kCFStreamSocketSecurityLevelNegotiatedSSL,
+					(id)kCFStreamSSLAllowsExpiredCertificates: @YES,
+					(id)kCFStreamSSLAllowsExpiredRoots: @YES,
+					(id)kCFStreamSSLAllowsAnyRoot: @YES,
+					(id)kCFStreamSSLValidatesCertificateChain: @NO,
+					(id)kCFStreamSSLPeerName: [NSNull null]};
 
 			CFReadStreamSetProperty(stream, kCFStreamPropertySSLSettings, sslSettings);
 		}
@@ -1300,7 +1298,7 @@ cleanup:
 			//
 			if (seekByteOffset == 0)
 			{
-				fileLength = [[httpHeaders objectForKey:@"Content-Length"] integerValue];
+				fileLength = [httpHeaders[@"Content-Length"] integerValue];
 			}
 		}
 
@@ -1921,9 +1919,9 @@ cleanup:
 		[self
 			performSelector:@selector(handlePropertyChange:)
 			onThread:internalThread
-			withObject:[NSNumber numberWithInt:inID]
+			withObject:@((UInt32)inID)
 			waitUntilDone:NO
-			modes:[NSArray arrayWithObject:NSDefaultRunLoopMode]];
+			modes:@[NSDefaultRunLoopMode]];
 		return;
 	}
 	@synchronized(self)
