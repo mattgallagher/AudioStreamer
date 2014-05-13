@@ -27,6 +27,8 @@
 #import <Cocoa/Cocoa.h>
 #endif // TARGET_OS_IPHONE
 
+#import <AVFoundation/AVAudioSession.h>
+
 #include <pthread.h>
 #include <AudioToolbox/AudioToolbox.h>
 
@@ -108,7 +110,7 @@ typedef enum
 
 extern NSString * const ASStatusChangedNotification;
 
-@interface AudioStreamer : NSObject
+@interface AudioStreamer : NSObject <AVAudioSessionDelegate>
 {
 	NSURL *url;
 

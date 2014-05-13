@@ -71,10 +71,6 @@ NSString * const AS_AUDIO_BUFFER_TOO_SMALL_STRING = @"Audio packets are larger t
 - (void)handlePropertyChangeForQueue:(AudioQueueRef)inAQ
 	propertyID:(AudioQueuePropertyID)inID;
 
-#if TARGET_OS_IPHONE
-- (void)handleInterruptionChangeToState:(NSNotification *)notification;
-#endif
-
 - (void)internalSeekToTime:(double)newSeekTime;
 - (void)enqueueBuffer;
 - (void)handleReadFromStream:(CFReadStreamRef)aStream
@@ -774,26 +770,34 @@ static void ASReadStreamCallBack
 			[pool release];
 			return;
 		}
-		
-	#if TARGET_OS_IPHONE			
-		//
-		// Set the audio session category so that we continue to play if the
-		// iPhone/iPod auto-locks.
-		//
-		AudioSessionInitialize (
-			NULL,                          // 'NULL' to use the default (main) run loop
-			NULL,                          // 'NULL' to use the default run loop mode
-			ASAudioSessionInterruptionListener,  // a reference to your interruption callback
-			self                       // data to pass to your interruption listener callback
-		);
-		UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
-		AudioSessionSetProperty (
-			kAudioSessionProperty_AudioCategory,
-			sizeof (sessionCategory),
-			&sessionCategory
-		);
-		AudioSessionSetActive(true);
-	#endif
+        
+    #if TARGET_OS_IPHONE
+        
+        /**
+         * Updated functions to use the Objective-C AVAudioSession code rather than the
+         * deprecated AudioSession C code to prevent deprecated warnings in iOS 7.
+         *
+         */
+        
+        BOOL success = NO;
+        NSError *error = nil;
+        
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        
+        success = [session setCategory:AVAudioSessionCategoryPlayback error:&error];
+        if ( ! success) {
+            NSLog(@"%@ Error setting category: %@", NSStringFromSelector(_cmd), [error localizedDescription]);
+            
+            // Exit early
+            return;
+        }
+        
+        success = [session setActive:YES error:&error];
+        if ( ! success) {
+            NSLog(@"%@", [error localizedDescription]);
+        }
+        
+    #endif
 	
 		// initialize a mutex and condition so that we can block on buffers in use.
 		pthread_mutex_init(&queueBuffersMutex, NULL);
@@ -882,8 +886,20 @@ cleanup:
 		pthread_mutex_destroy(&queueBuffersMutex);
 		pthread_cond_destroy(&queueBufferReadyCondition);
 
-#if TARGET_OS_IPHONE			
-		AudioSessionSetActive(false);
+#if TARGET_OS_IPHONE
+        
+        /**
+         * Updated to use AVAudioSession rather than AudioSession.
+         *
+         */
+        
+        NSError *deactivationError = nil;
+    
+		BOOL success = [[AVAudioSession sharedInstance] setActive:NO error:&deactivationError];
+        if ( ! success) {
+            NSLog(@"%@", [deactivationError localizedDescription]);
+        }
+        
 #endif
 
 		[httpHeaders release];
@@ -1974,35 +1990,29 @@ cleanup:
 }
 
 #if TARGET_OS_IPHONE
-//
-// handleInterruptionChangeForQueue:propertyID:
-//
-// Implementation for ASAudioQueueInterruptionListener
-//
-// Parameters:
-//    inAQ - the audio queue
-//    inID - the property ID
-//
-- (void)handleInterruptionChangeToState:(NSNotification *)notification {
-    AudioQueuePropertyID inInterruptionState = (AudioQueuePropertyID) [notification.object unsignedIntValue];
-	if (inInterruptionState == kAudioSessionBeginInterruption)
-	{ 
-		if ([self isPlaying]) {
-			[self pause];
-			
-			pausedByInterruption = YES; 
-		} 
-	}
-	else if (inInterruptionState == kAudioSessionEndInterruption) 
-	{
-		AudioSessionSetActive( true );
-		
-		if ([self isPaused] && pausedByInterruption) {
-			[self pause]; // this is actually resume
-			
-			pausedByInterruption = NO; // this is redundant 
-		}
-	}
+
+/**
+ * Removed handleInterruptionChangeToState function and use delegate methods
+ * of AVAudioSession to handle interruptions
+ *
+ */
+
+- (void)beginInterruption
+{
+    NSLog(@"begin interruption");
+    
+    [self pause];
+    
+    pausedByInterruption = YES;
+}
+
+- (void)endInterruption
+{
+    NSLog(@"end interruption");
+    
+    [self pause]; // this is actually resume
+    
+    pausedByInterruption = NO; // this is redundant
 }
 #endif
 
