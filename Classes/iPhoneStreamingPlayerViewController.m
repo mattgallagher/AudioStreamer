@@ -206,7 +206,9 @@
 		
 		[self createStreamer];
 		[self setButtonImageNamed:@"loadingbutton.png"];
-		[streamer start];
+		
+        [[AVAudioSession sharedInstance] setDelegate:streamer];
+        [streamer start];
 	}
 	else
 	{
