@@ -270,9 +270,9 @@
 		if (duration > 0)
 		{
 			[positionLabel setText:
-				[NSString stringWithFormat:@"Time Played: %.1f/%.1f seconds",
-					progress,
-					duration]];
+				[NSString stringWithFormat:@"Time Played: %@/%@",
+					[self stringFromTimeInterval:progress],
+					[self stringFromTimeInterval:duration]]];
 			[progressSlider setEnabled:YES];
 			[progressSlider setValue:100 * progress / duration];
 		}
@@ -287,6 +287,17 @@
 	}
 }
 
+//
+// To get the time formatted in HH:MM:SS format
+// Takes a second value, and returns a formatted string
+//
+- (NSString *)stringFromTimeInterval:(CGFloat)interval {
+    NSInteger ti = (NSInteger)interval;
+    NSInteger seconds = ti % 60;
+    NSInteger minutes = (ti / 60) % 60;
+    NSInteger hours = (ti / 3600);
+    return [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)hours, (long)minutes, (long)seconds];
+}
 //
 // textFieldShouldReturn:
 //

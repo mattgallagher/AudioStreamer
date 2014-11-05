@@ -1086,8 +1086,7 @@ cleanup:
 {
 	if (packetDuration && processedPacketsCount > BitRateEstimationMinPackets)
 	{
-		double averagePacketByteSize = processedPacketsSizeTotal / processedPacketsCount;
-		return 8.0 * averagePacketByteSize / packetDuration;
+		return processedPacketsSizeTotal / processedPacketsCount;
 	}
 	
 	if (bitRate)
@@ -1730,7 +1729,7 @@ cleanup:
 			
 			if (processedPacketsCount < BitRateEstimationMaxPackets)
 			{
-				processedPacketsSizeTotal += packetSize;
+				processedPacketsSizeTotal += 8.0 * packetSize / packetDuration;
 				processedPacketsCount += 1;
 			}
 			
