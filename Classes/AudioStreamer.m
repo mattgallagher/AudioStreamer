@@ -1356,24 +1356,20 @@ cleanup:
 			}
 		}
 
+		// make this conditional into a guard that just changes the inFlags, no need for repetitive stuff.
+		UInt32 inFlags = 0; 
 		if (discontinuous)
 		{
-			err = AudioFileStreamParseBytes(audioFileStream, length, bytes, kAudioFileStreamParseFlag_Discontinuity);
-			if (err)
-			{
-				[self failWithErrorCode:AS_FILE_STREAM_PARSE_BYTES_FAILED];
-				return;
-			}
+			inFlags = kAudioFileStreamParseFlag_Discontinuity;
 		}
-		else
+		
+		err = AudioFileStreamParseBytes(audioFileStream, length, bytes, inFlags);
+		if (err)
 		{
-			err = AudioFileStreamParseBytes(audioFileStream, length, bytes, 0);
-			if (err)
-			{
-				[self failWithErrorCode:AS_FILE_STREAM_PARSE_BYTES_FAILED];
-				return;
-			}
+			[self failWithErrorCode:AS_FILE_STREAM_PARSE_BYTES_FAILED];
+			return;
 		}
+		
 	}
 }
 
