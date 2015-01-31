@@ -28,12 +28,12 @@
 #endif
 
 int main(int argc, const char *argv[]) {
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
 #if TARGET_OS_IPHONE
-    int retVal = UIApplicationMain(argc, (char **)argv, nil, nil);
+        int retVal = UIApplicationMain(argc, (char **)argv, nil, nil);
 #else
-    int retVal = NSApplicationMain(argc, argv);
+        int retVal = NSApplicationMain(argc, argv);
 #endif
-    [pool release];
-    return retVal;
+        return retVal;
+    }
 }
