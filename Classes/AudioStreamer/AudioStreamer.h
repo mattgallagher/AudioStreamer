@@ -127,8 +127,8 @@ extern NSString * const ASStatusChangedNotification;
 	AudioStreamPacketDescription packetDescs[kAQMaxPacketDescs];	// packet descriptions for enqueuing audio
 	unsigned int fillBufferIndex;	// the index of the audioQueueBuffer that is being filled
 	UInt32 packetBufferSize;
-	size_t bytesFilled;				// how many bytes have been filled
-	size_t packetsFilled;			// how many packets have been filled
+	UInt32 bytesFilled;				// how many bytes have been filled
+	UInt32 packetsFilled;			// how many packets have been filled
 	bool inuse[kNumAQBufs];			// flags to indicate that a buffer is still in use
 	NSInteger buffersUsed;
 	NSDictionary *httpHeaders;
