@@ -102,10 +102,9 @@ static void ASPropertyListenerProc(void *						inClientData,
 {
     // this is called by audio file stream when it finds property values
     AudioStreamer* streamer = (__bridge AudioStreamer *)inClientData;
-    [streamer
-     handlePropertyChangeForFileStream:inAudioFileStream
-     fileStreamPropertyID:inPropertyID
-     ioFlags:ioFlags];
+    [streamer handlePropertyChangeForFileStream:inAudioFileStream
+                           fileStreamPropertyID:inPropertyID
+                                        ioFlags:ioFlags];
 }
 
 //
@@ -127,11 +126,10 @@ static void ASPacketsProc(		void *							inClientData,
 {
     // this is called by audio file stream when it finds packets of audio
     AudioStreamer* streamer = (__bridge AudioStreamer *)inClientData;
-    [streamer
-     handleAudioPackets:inInputData
-     numberBytes:inNumberBytes
-     numberPackets:inNumberPackets
-     packetDescriptions:inPacketDescriptions];
+    [streamer handleAudioPackets:inInputData
+                     numberBytes:inNumberBytes
+                   numberPackets:inNumberPackets
+              packetDescriptions:inPacketDescriptions];
 }
 
 //
@@ -150,7 +148,8 @@ static void ASAudioQueueOutputCallback(void*				inClientData,
     // this is called by the audio queue when it has finished decoding our data.
     // The buffer is now free to be reused.
     AudioStreamer* streamer = (__bridge AudioStreamer*)inClientData;
-    [streamer handleBufferCompleteForQueue:inAQ buffer:inBuffer];
+    [streamer handleBufferCompleteForQueue:inAQ
+                                    buffer:inBuffer];
 }
 
 //
@@ -163,7 +162,8 @@ static void ASAudioQueueOutputCallback(void*				inClientData,
 static void ASAudioQueueIsRunningCallback(void *inUserData, AudioQueueRef inAQ, AudioQueuePropertyID inID)
 {
     AudioStreamer* streamer = (__bridge AudioStreamer *)inUserData;
-    [streamer handlePropertyChangeForQueue:inAQ propertyID:inID];
+    [streamer handlePropertyChangeForQueue:inAQ
+                                propertyID:inID];
 }
 
 #if TARGET_OS_IPHONE
@@ -439,12 +439,8 @@ static void ASReadStreamCallBack
 //
 - (void)mainThreadStateNotification
 {
-    NSNotification *notification =
-    [NSNotification
-     notificationWithName:ASStatusChangedNotification
-     object:self];
-    [[NSNotificationCenter defaultCenter]
-     postNotification:notification];
+    NSNotification *notification = [NSNotification notificationWithName:ASStatusChangedNotification object:self];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
 //
@@ -484,10 +480,7 @@ static void ASReadStreamCallBack
             }
             else
             {
-                [self
-                 performSelectorOnMainThread:@selector(mainThreadStateNotification)
-                 withObject:nil
-                 waitUntilDone:NO];
+                [self performSelectorOnMainThread:@selector(mainThreadStateNotification) withObject:nil waitUntilDone:NO];
             }
         }
     }
@@ -642,7 +635,7 @@ static void ASReadStreamCallBack
         //
         // Create the HTTP GET request
         //
-        CFHTTPMessageRef message= CFHTTPMessageCreateRequest(NULL, (CFStringRef)@"GET", (__bridge CFURLRef)url, kCFHTTPVersion1_1);
+        CFHTTPMessageRef message = CFHTTPMessageCreateRequest(NULL, (CFStringRef)@"GET", (__bridge CFURLRef)url, kCFHTTPVersion1_1);
         
         //
         // If we are creating this request to seek to a location, set the
@@ -650,8 +643,7 @@ static void ASReadStreamCallBack
         //
         if (fileLength > 0 && seekByteOffset > 0)
         {
-            CFHTTPMessageSetHeaderFieldValue(message, CFSTR("Range"),
-                                             (__bridge CFStringRef)[NSString stringWithFormat:@"bytes=%ld-%ld", (long)seekByteOffset, (long)fileLength]);
+            CFHTTPMessageSetHeaderFieldValue(message, CFSTR("Range"),(__bridge CFStringRef)[NSString stringWithFormat:@"bytes=%lu-%lu", seekByteOffset, fileLength]);
             discontinuous = YES;
         }
         
@@ -686,9 +678,7 @@ static void ASReadStreamCallBack
         //
         if([[url scheme] isEqualToString:@"https"])
         {
-            NSDictionary *sslSettings =
-            [NSDictionary dictionaryWithObjectsAndKeys:
-             @(YES), kCFStreamSSLValidatesCertificateChain,
+            NSDictionary *sslSettings = [NSDictionary dictionaryWithObjectsAndKeys:@(YES), kCFStreamSSLValidatesCertificateChain,
              [NSNull null], kCFStreamSSLPeerName,
              nil];
             
@@ -775,18 +765,15 @@ static void ASReadStreamCallBack
             //
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated"
-            AudioSessionInitialize (
-                                    NULL,                          // 'NULL' to use the default (main) run loop
-                                    NULL,                          // 'NULL' to use the default run loop mode
-                                    ASAudioSessionInterruptionListener,  // a reference to your interruption callback
-                                    (__bridge void *)(self)                       // data to pass to your interruption listener callback
-                                    );
+            AudioSessionInitialize(NULL,                          // 'NULL' to use the default (main) run loop
+                                   NULL,                          // 'NULL' to use the default run loop mode
+                                   ASAudioSessionInterruptionListener,  // a reference to your interruption callback
+                                   (__bridge void *)(self)                       // data to pass to your interruption listener callback
+                                   );
             UInt32 sessionCategory = kAudioSessionCategory_MediaPlayback;
-            AudioSessionSetProperty (
-                                     kAudioSessionProperty_AudioCategory,
-                                     sizeof (sessionCategory),
-                                     &sessionCategory
-                                     );
+            AudioSessionSetProperty(kAudioSessionProperty_AudioCategory,
+                                    sizeof (sessionCategory),
+                                    &sessionCategory);
             AudioSessionSetActive(true);
 #pragma clang diagnostic pop
 #endif
@@ -807,9 +794,8 @@ static void ASReadStreamCallBack
         BOOL isRunning = YES;
         do
         {
-            isRunning = [[NSRunLoop currentRunLoop]
-                         runMode:NSDefaultRunLoopMode
-                         beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.25]];
+            isRunning = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                                                 beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.25]];
             
             @synchronized(self) {
                 if (seekWasRequested) {
@@ -917,14 +903,10 @@ static void ASReadStreamCallBack
         {
             NSAssert([[NSThread currentThread] isEqual:[NSThread mainThread]],
                      @"Playback can only be started from the main thread.");
-            notificationCenter =
-            [NSNotificationCenter defaultCenter];
+            notificationCenter = [NSNotificationCenter defaultCenter];
             self.state = AS_STARTING_FILE_THREAD;
             internalThread =
-            [[NSThread alloc]
-             initWithTarget:self
-             selector:@selector(startInternal)
-             object:nil];
+            [[NSThread alloc] initWithTarget:self selector:@selector(startInternal) object:nil];
             [internalThread start];
         }
     }
@@ -1288,8 +1270,7 @@ static void ASReadStreamCallBack
         {
             CFTypeRef message =
             CFReadStreamCopyProperty(stream, kCFStreamPropertyHTTPResponseHeader);
-            httpHeaders =
-            (__bridge NSDictionary *)CFHTTPMessageCopyAllHeaderFields((CFHTTPMessageRef)message);
+            httpHeaders = (__bridge NSDictionary *)CFHTTPMessageCopyAllHeaderFields((CFHTTPMessageRef)message);
             CFRelease(message);
             
             //
